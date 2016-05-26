@@ -1,0 +1,16 @@
+<configuration>
+  <property>
+    <name>hplsql.conn.default</name>
+    <value>myhiveconn</value>
+  </property>
+
+  <property>
+    <name>hplsql.conn.myhiveconn</name>
+    <value>org.apache.hive.jdbc.HiveDriver;jdbc:hive2://hdp250.example.com:10000</value>
+  </property>
+
+  <property>
+    <name>hplsql.conn.mydbconn</name>
+    <value>com.mysql.jdbc.Driver;jdbc:mysql://hdp250.example.com:3306/hive;hive;vagrant</value>
+  </property>
+</configuration>
