@@ -15,7 +15,7 @@
 
   "clients" : [ "hbase", "hdfs", "odbc-phoenix", "yarn", "zk"],
   "nodes": [
-    {"hostname": "hdp250-hbase-secure", "ip": "192.168.59.11",
+    {"hostname": "hdp250-hbase-secure", "ip": "192.168.59.12",
      "roles": ["client", "hbase-master", "hbase-regionserver", "httpd", "kdc", "nn",
                "phoenix-query-server", "slave", "yarn", "zk"]}
   ]

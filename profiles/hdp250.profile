@@ -12,7 +12,7 @@
   "domain": "example.com",
   "realm": "EXAMPLE.COM",
 
-  "clients" : [ "hdfs", "hive", "hive2", "odbc", "slider", "tez", "yarn", "zk" ],
+  "clients" : [ "hdfs", "hive", "hive2", "odbc", "slider", "spark", "tez", "yarn", "zk" ],
   "nodes": [
     {"hostname": "hdp250", "ip": "192.168.59.11",
      "roles": ["client", "hive-db", "hive-meta",

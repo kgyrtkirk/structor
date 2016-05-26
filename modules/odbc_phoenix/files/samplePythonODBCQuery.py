@@ -1,6 +1,6 @@
 import pyodbc
 
-cnxn = pyodbc.connect('DSN=Hortonworks Phoenix ODBC DSN;UID=vagrant;PWD=vagrant')
+cnxn = pyodbc.connect('DSN=Hortonworks Phoenix ODBC DSN', autocommit=True)
 cursor = cnxn.cursor()
 
 print "Number of records in catalog"
