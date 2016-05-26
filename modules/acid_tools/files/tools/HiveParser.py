@@ -44,8 +44,13 @@ def getConnectionDetails(type="mysql"):
 	parameters = {}
 
 	# Parse hive site to get database connection details.
-	hive_site = "/etc/hive/conf/hive-site.xml"
-	if not os.path.isfile(hive_site):
+	hive_sites = [ "/etc/hive/conf/conf.server/hive-site.xml", "/etc/hive/conf/hive-site.xml" ]
+	hive_site = None
+	for file in hive_sites:
+		if os.path.isfile(file):
+			hive_site = file
+			break
+	if hive_site == None:
 		raise OSError("Cannot find hive-site.xml")
 	tree = ET.parse(hive_site)
 	attributes = {}

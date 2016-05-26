@@ -9,6 +9,7 @@ import HiveParser
 def main():
 	details = HiveParser.getConnectionDetails()
 	command = HiveParser.getConnectCommand(details)
+	print "Connect string is:", command
 	if details["type"] == "mysql":
 		os.execv("/bin/sh", ["sh", "-c", command])
 
