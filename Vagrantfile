@@ -66,8 +66,8 @@ profile = loadProfile()
 
 # Set defaults.
 default_os = "centos6"
-default_hdp_short_version = "2.3.2"
-default_ambari_version = "2.1.2.1"
+default_hdp_short_version = "2.3.4"
+default_ambari_version = "2.2.2.0"
 default_java_version = "java-1.7.0-openjdk"
 
 profile[:hdp_short_version] ||= default_hdp_short_version
