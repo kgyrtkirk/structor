@@ -38,11 +38,13 @@ EOF
 
 read -p "Applying permissions to schemas."
 cat<<EOF>temp.txt
-grant 'user1', 'RC', 'SYSTEM:CATALOG'
+grant 'user1', 'A', '@SYSTEM'
+grant 'user1', 'RWC', 'SYSTEM:CATALOG'
 grant 'user1', 'C', 'SYSTEM:SEQUENCE'
 grant 'user1', 'C', 'SYSTEM:STATS'
 grant 'user1', 'C', 'SYSTEM:FUNCTION'
-grant 'user2', 'RC', 'SYSTEM:CATALOG'
+grant 'user2', 'A', '@SYSTEM'
+grant 'user2', 'RWC', 'SYSTEM:CATALOG'
 grant 'user2', 'C', 'SYSTEM:SEQUENCE'
 grant 'user2', 'C', 'SYSTEM:STATS'
 grant 'user2', 'C', 'SYSTEM:FUNCTION'
