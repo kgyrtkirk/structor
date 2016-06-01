@@ -13,10 +13,11 @@
   "domain": "example.com",
   "realm": "EXAMPLE.COM",
 
-  "clients" : [ "hbase", "hdfs", "odbc-phoenix", "yarn", "zk"],
+  "clients" : [ "hbase", "hdfs", "hive", "odbc-phoenix", "tez", "yarn", "zk"],
   "nodes": [
     {"hostname": "hdp250-hbase-nonsecure", "ip": "192.168.59.11",
-     "roles": ["client", "hbase-master", "hbase-regionserver", "httpd", "kdc", "nn",
+     "roles": ["client", "hbase-master", "hbase-regionserver",
+               "hive-db", "hive-meta", "httpd", "kdc", "nn",
                "phoenix-query-server", "slave", "yarn", "zk"]}
   ]
 }
