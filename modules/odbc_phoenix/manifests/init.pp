@@ -55,7 +55,7 @@ class odbc_phoenix {
       command => "rpm -i $rpm",
       cwd => "/tmp",
       path => "$path",
-      unless => "rpm -qa | grep $build",
+      unless => "rpm -qa | grep SimbaPhoenixODBC",
       before => File["$config_path"],
       require => Exec["Download ODBC"],
     }
