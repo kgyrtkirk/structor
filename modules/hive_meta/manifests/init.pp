@@ -39,11 +39,18 @@ class hive_meta {
     path => "$path",
   }
   ->
-  exec { "schematool -dbType mysql -initSchema":
+  exec { "Hive 2 Schema":
+    command => "/usr/hdp/current/hive-server2-hive2/bin/schematool -dbType mysql -initSchema",
     user => "hive",
     cwd => "/",
-    path => "/usr/hdp/current/hive-metastore/bin:$path",
-    unless => 'schematool -dbType mysql -info',
+    unless => '/usr/bin/test ! -f /usr/hdp/current/hive-server2-hive2/bin/schematool || /usr/hdp/current/hive-server2-hive2/bin/schematool -dbType mysql -info',
+  }
+  ->
+  exec { "Hive 1 Schema":
+    command => "/usr/hdp/current/hive-metastore/bin/schematool -dbType mysql -initSchema",
+    user => "hive",
+    cwd => "/",
+    unless => '/usr/hdp/current/hive-metastore/bin/schematool -dbType mysql -info',
   }
   ->
   service { 'hive-metastore':
