@@ -7,7 +7,7 @@ hdfs dfs -rmr /user/vagrant/.Trash
 sudo bash -c "rm -rf /var/lib/hadoop/yarn/node/usercache/hbase/appcache/application_*"
 sudo yum -y install epel-release
 sudo yum -y install python-pip
-sudo pip install importlib
+sudo pip install importlib fake-factory
 
 # Generate data.
 echo "Generating Data"
