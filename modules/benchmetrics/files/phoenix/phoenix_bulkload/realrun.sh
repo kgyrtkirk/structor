@@ -10,6 +10,7 @@ yarn jar /usr/hdp/current/phoenix-client/phoenix-client.jar \
         org.apache.phoenix.mapreduce.CsvBulkLoadTool \
         -Dmapreduce.reduce.memory.mb=2048 \
         -Dmapred.reduce.child.java.opts=-Xmx1800m \
+        -Dphoenix.schema.isNamespaceMappingEnabled=true \
         --table bulkload_test \
         --input /tmp/phoenix_data \
         -d '|' &
