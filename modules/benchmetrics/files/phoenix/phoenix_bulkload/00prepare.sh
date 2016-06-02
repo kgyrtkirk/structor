@@ -24,6 +24,8 @@ done
 # Copy into HDFS and remove.
 hdfs dfs -copyFromLocal /tmp/phoenix_data /tmp/phoenix_data
 rm -f /tmp/phoenix_data/*.txt
+sudo -u hdfs hdfs dfs -mkdir -p /user/hbase
+sudo -u hdfs hdfs dfs -chown hbase:hbase /user/hbase
 
 # Create the table.
 /usr/hdp/current/phoenix-client/bin/sqlline.py -f /vagrant/modules/benchmetrics/files/phoenix/phoenix_bulkload/create_table.sql
