@@ -12,16 +12,16 @@
   "domain": "example.com",
   "realm": "EXAMPLE.COM",
 
-  "clients" : [ "hdfs", "hive", "hive2", "odbc", "slider", "spark", "tez", "yarn", "zk" ],
+  "clients" : [ "hdfs", "hive", "hive2", "odbc", "slider", "tez", "yarn", "zk" ],
   "nodes": [
-    {"hostname": "hdp250", "ip": "192.168.59.11",
+    {"hostname": "hdp250-acid", "ip": "192.168.59.19",
      "roles": ["client", "hive-db", "hive-meta",
                "hive2", "hive2-server2",
-               "httpd", "nn", "postgres", "slave", "tez-ui",
+               "httpd", "nn", "slave", "tez-ui",
                "yarn", "yarn-timelineserver", "zk"]}
   ],
 
-  "hive_options" : "interactive",
+  "hive_options" : "acid",
 
   "extras": [ "sample-hive-data" ]
 }
