@@ -4,13 +4,17 @@
 
 from faker import Factory
 
-import sys, math, random, time
 import calendar
+import sys, math, random, time
+import numpy
 import os
+import scipy
+import scipy.stats
 import string
+import uuid
 
 from collections import namedtuple
-from datetime import datetime,timedelta
+from datetime import datetime, timedelta
 from getopt import getopt
 from os.path import join as path_join
 from zipf import zipf
@@ -178,6 +182,246 @@ def fake_accounts(scale=1, child=0):
 		write_rows(tbl_txns, t_s)
 		#print "Written %d transactions for %d customers" % (totals, i-start_rows)
 	return 0
+
+# Supported journies:
+#  Mobile -> campaign -> evaluate -> abandon
+#  Mobile -> campaign -> evaluate -> convert
+#  Mobile -> campaign -> evaluate -> defer -> wait 1-8 hours -> Desktop -> search -> convert
+#  Mobile -> search -> abandon
+#  Mobile -> search -> convert
+#  Desktop -> campaign -> evaluate -> abandon
+#  Desktop -> campaign -> evaluate -> convert
+#  Desktop -> search -> abandon
+#  Desktop -> search -> convert
+# Order:
+#  (1) figure out mobile versus desktop
+#  (2) Figure out search versus campaign
+#  (3) For campaign, evaluate the campaign relative to user
+#  (4) Convert or Abandon
+# Events will run over a 3 month period
+# Num Journies = 250000 per segment
+# Explicit breakdown of mobile versus desktop.
+# Base mobile conversion rate = 1%
+# Base desktop conversion rate = 4%
+# Potential customer pool = scale * 20000
+# Device ownership = 1xMobile + 1xDesktop
+# 20 campaigns per month (120 total)
+# Mobile mix:
+#  3 overlapping beta distributions
+#  1 large distribution centered at noon for desktop
+#  2 smaller distributions for mobile
+def fake_multidevice(scale=1, child=0):
+	num_users = 20000
+	num_journies = 250000
+	#num_journies = 1000
+	num_campaigns = 20
+	num_products = 1000
+	base_desktop_sale_chance = 0.04
+	base_mobile_sale_chance = 0.01
+	chance_switch_mobile_to_desktop = 0.75
+
+	# The campaigns need to be the same everywhere.
+	random.seed(0)
+
+	# Generate some campaigns and record them.
+	campaigns = []
+	for i in xrange(0, num_campaigns):
+		campaigns.append( {
+			"id"               : i + 1,
+			"sex_preference"   : random.choice(['M', 'F']),
+			"mobile_optimized" : random.choice([True, False]),
+			"optimal_hour"     : int(random.uniform(8, 18)),
+			"promoted_product" : int(random.uniform(0, num_products))
+		} )
+	output = open("fake_campaigns.%06d.txt" % child, "w")
+	for c in campaigns:
+		record = [ c["id"], c["sex_preference"], c["mobile_optimized"], c["optimal_hour"], c["promoted_product"] ]
+		record = [ str(x) for x in record ]
+		output.write('|'.join(record) + "\n")
+
+	# Break out of the sameness.
+	random.seed(child)
+
+	# Create users.
+	users = []
+	output = open("fake_users.%06d.txt" % child, "w")
+	for i in xrange(0, num_users):
+		user_id = str(i + (num_users * child))
+		sex = random.choice(['M', 'F'])
+		name = None
+		if sex == "M":
+			name = " ".join([faker.first_name_male(), faker.first_name_male()])
+		else:
+			name = " ".join([faker.first_name_female(), faker.first_name_female()])
+		credit_card = faker.credit_card_number()
+		addr_city = faker.city()
+		addr_state = faker.state_abbr()
+		addr_postal_code = faker.zipcode()
+		email = faker.email()
+		phone_cell = faker.phone_number()
+		record = [ user_id, name, sex, credit_card, addr_city, addr_state, addr_postal_code, email, phone_cell ]
+		users.append(record)
+		output.write('|'.join(record) + "\n")
+
+	# Setup distributions.
+	numpy.random.seed(seed=child)
+	mobile_1 = scipy.stats.beta(2, 5)
+	mobile_2 = scipy.stats.beta(2, 1)
+	desktop_1 = scipy.stats.beta(2, 2)
+	time_distribution = scipy.stats.beta(2, 2)
+
+	# Create random journies.
+	clickstream_fd = open("fake_clickstream.%06d.txt" % child, "w")
+	sales_fd = open("fake_sales.%06d.txt" % child, "w")
+	cookies = {}
+	ip_addresses = {}
+	clicks = []
+	sales = []
+	num_mobile_switches = 0
+	for i in xrange(0, num_journies):
+		# Tracking ID (to measure effectiveness of multi-device detection)
+		tracking_id = i + (num_journies * child)
+
+		# When?
+		date_min = datetime(2016, 04, 01, 0, 0)
+		date_max = datetime(2016, 06, 30, 23, 59)
+		date_time = faker.date_time_between(start_date=date_min, end_date=date_max)
+		time_offset = time_distribution.rvs()
+
+		# Get the specific time in H/M/S.
+		minutes = time_offset * 1440
+		hours = int(minutes / 60)
+		seconds = int(minutes % 1 * 60)
+		minutes = int(minutes - hours * 60)
+		date_time.replace(hour=hours, minute=minutes, second=seconds)
+
+		# Mobile or desktop? Get the CDFs of the 3 distributions and pick among them.
+		cdfs = [ desktop_1.cdf(time_offset), mobile_1.cdf(time_offset) / 4, mobile_2.cdf(time_offset) / 4 ]
+		choice = random.uniform(0, sum(cdfs))
+		platform = "mobile"
+		if choice <= cdfs[0]:
+			platform = "desktop"
+
+		# Organic search or promotion?
+		organic = True
+		campaign = None
+		if random.random() < 0.25:
+			organic = False
+			campaign = random.choice(campaigns)
+
+		# The user in question. This is hidden within the clickstream, visible in the orders table.
+		user_offset = int(random.uniform(0, num_users))
+		user_id = user_offset + (num_users * child)
+
+		# Cookie ID. We track these in case they are re-used.
+		cookie_id = assign_cookie(cookies, user_id, platform)
+
+		# IP addresses. These are stable per user.
+		if user_id not in ip_addresses:
+			ip_addresses[user_id] = [ None, None ]
+		offset = 0 if platform == "desktop" else 1
+		if ip_addresses[user_id][offset] == None:
+			ip_addresses[user_id][offset] = random_ip_address(user_id)
+		ip_address = ip_addresses[user_id][offset]
+
+		# User visits a few pages. Number of pages is gamma distributed but more focused for campaigns.
+		if campaign:
+			num_pages = int(random.gammavariate(1, 3) + 1)
+		else:
+			num_pages = int(random.gammavariate(2, 3) + 1)
+
+		# Seed the product ID.
+		if campaign:
+			original_product_id = campaign['promoted_product']
+			campaign_id = campaign['id']
+		else:
+			original_product_id = None
+			campaign_id = 0
+		click_time = date_time
+		for j in range(0, num_pages):
+			if original_product_id != None:
+				product_id = original_product_id
+				original_product_id = None
+			else:
+				product_id = random.randint(0, num_products)
+			click = [ click_time, ip_address, product_id, campaign_id, cookie_id, platform, tracking_id ]
+			click = [ str(x) for x in click ]
+			think_time = random.randint(0, 45)
+			click_time = click_time + timedelta(seconds=think_time)
+
+			# We buffer these up and sort by time before outputting.
+			clicks.append(click)
+
+		# Determine if we've made a sale.
+		if platform == "desktop":
+			sale_chance = base_desktop_sale_chance
+		else:
+			sale_chance = base_mobile_sale_chance
+		if campaign:
+			# Campaign can help or hurt, depending on sex preference, mobile optimization and promity to optimal time.
+			# Wrong sex match cuts conversion in half. Correct match increases by 25%.
+			campaign_sex_preference = campaign["sex_preference"]
+			user_sex = users[user_offset][2]
+			if campaign_sex_preference == user_sex:
+				sale_chance *= 1.25
+			else:
+				sale_chance *= 0.5
+
+			# If user is on mobile and campaign is not mobile optimized, lose 3/4. Otherwise, triple.
+			if platform == "mobile":
+				if campaign["mobile_optimized"] == True:
+					sale_chance *= 3.0
+				else:
+					sale_chance *= 0.25
+
+			# Increase conversion by up to 50% if we hit the optimal hour. Decay the further we are away.
+			hour_delta = abs(campaign["optimal_hour"] - (date_time.hour + date_time.minute / 60.0))
+			adjustment = (gaussian(hour_delta, 0, 1) * 0.6 / gaussian(0, 0, 1)) + 0.9
+			sale_chance *= adjustment
+
+		if random.random() < sale_chance:
+			# If we're on mobile, some chance that we come back up to 8 hours later and buy on desktop.
+			if platform == "mobile" and random.random() < chance_switch_mobile_to_desktop:
+				platform = "desktop"
+				cookie_id = assign_cookie(cookies, user_id, platform)
+
+				# Advance time up to 8 hours. Access the same last product and purchase.
+				wait_time = random.uniform(1, 8)
+				wait_hours = int(wait_time)
+				wait_minutes = int((wait_time % 1) * 60)
+				click_time += timedelta(hours=wait_hours, minutes=wait_minutes)
+				click = [ click_time, ip_address, product_id, campaign_id, cookie_id, platform, tracking_id ]
+				click = [ str(x) for x in click ]
+				clicks.append(click)
+				num_mobile_switches += 1
+
+			sale = [ click_time, user_id, product_id, campaign_id, cookie_id, tracking_id ]
+			sale = [ str(x) for x in sale ]
+			sales.append(sale)
+
+	sales.sort(key=lambda x: x[0])
+	for s in sales:
+		sales_fd.write('|'.join(s) + "\n")
+	clicks.sort(key=lambda x: x[0])
+	for c in clicks:
+		clickstream_fd.write('|'.join(c) + "\n")
+
+	print "Number of mobile switches", num_mobile_switches
+
+def gaussian(x, mu, sig):
+	return 1./(math.sqrt(2.*math.pi)*sig)*numpy.exp(-numpy.power((x - mu)/sig, 2.)/2)
+
+def assign_cookie(cookies, user_id, platform):
+	if user_id not in cookies:
+		cookies[user_id] = [ None, None ]
+	offset = 0 if platform == "desktop" else 1
+	if cookies[user_id][offset] == None:
+		cookies[user_id][offset] = uuid.uuid1()
+	return cookies[user_id][offset]
+
+def random_ip_address(user_id):
+	parts = [ 10, (user_id / (256**2)) % 256, (user_id / 256) % 256, user_id % 256 ]
+	return ".".join([ str(x) for x in parts ])
 
 # Example records:
 # date,city,state,category,age,sex,promoid,referrerid,zip,ispromo,agegroup
