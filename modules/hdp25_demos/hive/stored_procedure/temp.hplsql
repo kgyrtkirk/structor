@@ -1,8 +1,0 @@
--- Copy data from FTP into HDFS.
-copy from ftp hdp250.example.com user 'vagrant' pwd 'vagrant' dir '/' files 'sampledata.csv' to /tmp overwrite
-
--- Identify the next partition in the latest date.
-max_partition = NVL(MAX_PART_STRING(citydata.citydata, load_date), 'UNDEFINED')
-print max_partition
-max_runid = NVL(MAX_PART_STRING(citydata.citydata, runid, load_date=max_partition), 'UNDEFINED')
-print max_runid
