@@ -20,5 +20,4 @@ cp sampledata.csv /home/vagrant
 mysql -uhive -pvagrant < mysql_setup.sql
 
 # Stage some seed data in.
-sudo -u hdfs hdfs dfs -copyFromLocal citydata.db /apps/hive/warehouse
-sudo -u hdfs hdfs dfs -chown -R vagrant:vagrant /apps/hive/warehouse/citydata.db
+hive -f /vagrant/modules/hdp25_demos/hive/stored_procedure/recreate_schema.sql

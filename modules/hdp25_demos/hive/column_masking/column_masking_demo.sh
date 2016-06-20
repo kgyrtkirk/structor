@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -x
+mkfifo /tmp/fifo
 
 read -p "Adding some sample data and views"
 hdfs dfs -mkdir -p /user/vagrant/column_masking

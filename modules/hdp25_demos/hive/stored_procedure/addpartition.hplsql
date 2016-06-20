@@ -7,28 +7,26 @@ print max_partition
 max_runid = NVL(MAX_PART_STRING(citydata.citydata, runid, load_date=max_partition), 'UNDEFINED')
 print max_runid
 
--- XXX: Not working at the moment, bug filed.
+-- XXX: Integer incrementing is broken in Hive 2.1, see HIVE-13540
 -- next_runid = cast(max_runid as int) + 1
 next_runid = 'X' + max_runid
 print next_runid
 
--- Track state in MySQL.
-MAP OBJECT state TO state AT mydbconn
-insert into state values (max_partition, next_runid, false)
-
 -- Copy data into this new partition.
-path = '/apps/hive/warehouse/citydata/load_date=' || max_partition || '/runid=' || next_runid
+path = '/apps/hive/warehouse/citydata.db/citydata/load_date=' || max_partition || '/runid=' || next_runid || '/sampledata.csv'
 copy from local '/home/vagrant/sampledata.csv' to path OVERWRITE
 
 -- Alter table to add the new partition.
-alter_table = 'alter table citydata add if not exists partition (load_date="' || max_partition || '", runid="' || next_runid || '")'
+alter_table = 'alter table citydata.citydata add if not exists partition (load_date="' || max_partition || '", runid="' || next_runid || '")'
 print alter_table
 EXECUTE alter_table INTO ignore1;
 
 -- Report progress.
-count_new_rows = 'select count(*) from citydata where load_date="' || max_partition || '" and runid="' || next_runid || '"'
+count_new_rows = 'select count(*) from citydata.citydata where load_date="' || max_partition || '" and runid="' || next_runid || '"'
 DECLARE row_count1 INT
 EXECUTE count_new_rows INTO row_count1
 print 'Finished adding ' || row_count1 || ' new rows'
 
--- Update state in MySQL.
+-- Mark the load as successful in MySQL.
+MAP OBJECT state TO state AT mydbconn
+insert into state values (max_partition, next_runid, true)
