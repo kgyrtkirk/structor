@@ -62,8 +62,8 @@ class tez_ui {
     onlyif => "test -d /usr/hdp/$hdp_version/tez_hive2/",
   }
   ->
-  file { "/var/www/html/tez-ui2/config/configs.env":
+  file { "/var/www/html/tez-ui2/scripts/configs.js":
     ensure => file,
-    content => template('tez_ui/configs.env.erb'),
+    content => template('tez_ui/configs.08.js.erb'),
   }
 }

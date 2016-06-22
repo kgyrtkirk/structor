@@ -19,6 +19,10 @@ class hive2_llap {
 
   $path="/bin:/usr/bin"
 
+  if $security == "true" {
+    require load_hive_keytab
+  }
+
   # LLAP Sizing:
   # LLAP will take up all YARN memory minus 1 GB (including Slider AM overhead of 0.5 GB)
   #   First: Try to set number of executors = number of CPUs.
@@ -49,6 +53,13 @@ class hive2_llap {
   $cache_size = $llap_yarn_size - $full_executor_allotment
   $xmx_size   = $full_executor_allotment - $gc_anti_slop
 
+  # Extra security related setup.
+  if $security == "true" {
+    $security_args = "--slider-keytab hive.keytab --slider-keytab-dir .slider/keytabs/llap --slider-principal hive/llap-secure.example.com@EXAMPLE.COM"
+  } else {
+    $security_args = ""
+  }
+
   # Build a package.
   $extra_args="-XX:+UseG1GC -XX:TLABSize=8m -XX:+ResizeTLAB -XX:+UseNUMA -XX:+AggressiveOpts -XX:+AlwaysPreTouch -XX:InitiatingHeapOccupancyPercent=80 -XX:MaxGCPauseMillis=200 -XX:HeapDumpPath=/tmp/llap.hprof -XX:-HeapDumpOnOutOfMemoryError"
   exec { "Eliminate old Slider package":
@@ -57,13 +68,14 @@ class hive2_llap {
   }
   ->
   exec { "Build LLAP package":
-    command => "hive2 --service llap --instances 1 --cache ${cache_size}m --executors ${num_executors} --size ${llap_yarn_size}m --xmx ${xmx_size}m --loglevel WARN --slider-am-container-mb 512 --args \"$extra_args\"",
-    cwd => "/usr/hdp",
+    command => "hive2 --service llap --instances 1 --cache ${cache_size}m --executors ${num_executors} --size ${llap_yarn_size}m --xmx ${xmx_size}m --loglevel WARN --slider-am-container-mb 512 $security_args --args \"$extra_args\"",
+    cwd => "/tmp",
     path => $path,
+    user => "hive",
   }
   ->
   exec { "Rename LLAP package output to something guessable":
-    command => "mv /usr/hdp/llap-slider-* /usr/hdp/llap-slider",
+    command => "mv /tmp/llap-slider-* /usr/hdp/llap-slider",
     path => $path,
   }
   ->
@@ -74,10 +86,4 @@ class hive2_llap {
 
   # Control script.
   # XXX: Don't even know if this is possible.
-
-  # XXX: This needs to go ASAP.
-  package { "python-argparse":
-    ensure => installed,
-    before => Exec["Build LLAP package"],
-  }
 }

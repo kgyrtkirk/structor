@@ -40,6 +40,12 @@ class hive2_server2 {
       source => "/vagrant/files/systemd/hive2-server2.service.d/default.conf",
       before => Service["hive2-server2"],
     }
+    file { "/usr/hdp/current/hive-server2-hive2/hive2-server2":
+      ensure => file,
+      mode   => '755',
+      source => 'puppet:///modules/hive2_server2/hive2-server2',
+      before => Service["hive2-server2"],
+    }
   } else {
     file { "/usr/hdp/${hdp_version}/etc/default/hive2-server2":
       ensure => file,
