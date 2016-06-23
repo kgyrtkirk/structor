@@ -86,6 +86,20 @@ def account(i, edate, same_month=False):
 	effective_date = faker.date_time_between(start_date=to_datetime(edate), end_date=last_date).strftime("%Y-%m-%d")
 	return [account_id, account_number, account_code, account_type, account_subtype, account_subtype2, account_description, card_number, card_security_id, effective_date]
 
+def credit_card_with_dashes(faker):
+	x = faker.credit_card_number()
+	l = len(x)
+	if l == 12:
+		return "-".join([ x[0:4], x[4:6], x[6:8], x[8:12] ])
+	if l == 13:
+		return "-".join([ x[0:4], x[4:7], x[7:9], x[9:13] ])
+	if l == 14:
+		return "-".join([ x[0:4], x[4:7], x[7:10], x[10:14] ])
+	if l == 15:
+		return "-".join([ x[0:4], x[4:8], x[8:11], x[11:15] ])
+	if l == 16:
+		return "-".join([ x[0:4], x[4:8], x[8:12], x[12:16] ])
+
 def customer_accounts(i, edate):
 	global faker, earliest_date, latest_date
 	customer_id = 1000000000 + i
@@ -212,16 +226,80 @@ def fake_accounts(scale=1, child=0):
 #  2 smaller distributions for mobile
 def fake_multidevice(scale=1, child=0):
 	num_users = 20000
-	num_journies = 250000
+	num_users = 2000
+	#num_journies = 250000
 	#num_journies = 1000
+	num_journies = 25000
 	num_campaigns = 20
 	num_products = 1000
+	num_products = 100
 	base_desktop_sale_chance = 0.04
 	base_mobile_sale_chance = 0.01
 	chance_switch_mobile_to_desktop = 0.75
 
 	# The campaigns need to be the same everywhere.
 	random.seed(0)
+
+	# Static load script assets.
+	load_script = """#!/bin/sh
+
+set -x
+
+for f in campaigns clickstream sales users; do
+	hdfs dfs -mkdir -p /apps/hive/warehouse/multichannel.db/$f
+	hdfs dfs -copyFromLocal fake_$f* /apps/hive/warehouse/multichannel.db/$f
+done
+"""
+	with open("fake_load.sh", "w") as fd:
+		fd.write(load_script)
+
+	# Table DDL
+	table_ddl = """
+drop database if exists multichannel cascade;
+create database multichannel;
+use multichannel;
+
+create table campaigns(
+	campaign_id int,
+	sex_preference string,
+	mobile_optimized boolean,
+	optimal_hour int,
+	promoted_product_id int
+) row format delimited fields terminated by '|';
+
+create table clickstream(
+	click_time timestamp,
+	ip string,
+	product_id int,
+	campaign_id int,
+	cookie string,
+	platform string,
+	tracking_id_internal int
+) row format delimited fields terminated by '|';
+
+create table sales(
+	sale_time timestamp,
+	customer_id int,
+	product_id int,
+	promotion_id int,
+	cookie string,
+	tracking_id_internal int
+) row format delimited fields terminated by '|';
+
+create table users(
+	customer_id int,
+	customer_name string,
+	customer_sex string,
+	customer_ccn string,
+	customer_city string,
+	customer_state string,
+	customer_zip string,
+	customer_email string,
+	customer_phone string
+) row format delimited fields terminated by '|';
+"""
+	with open("create_multidevice_database.sql", "w") as fd:
+		fd.write(table_ddl)
 
 	# Generate some campaigns and record them.
 	campaigns = []
@@ -253,7 +331,7 @@ def fake_multidevice(scale=1, child=0):
 			name = " ".join([faker.first_name_male(), faker.first_name_male()])
 		else:
 			name = " ".join([faker.first_name_female(), faker.first_name_female()])
-		credit_card = faker.credit_card_number()
+		credit_card = credit_card_with_dashes(faker)
 		addr_city = faker.city()
 		addr_state = faker.state_abbr()
 		addr_postal_code = faker.zipcode()
