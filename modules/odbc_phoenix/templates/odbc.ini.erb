@@ -33,6 +33,51 @@ Description=Hortonworks Phoenix ODBC Driver DSN
 # Driver: The location where the ODBC driver is installed to.
 Driver=/opt/hortonworks/phoenixodbc/lib/64/libphoenixodbc_sb64.so
 
-# Required: These values can also be specified in the connection string.
+# The Phoenix Query Server Host (Required)
 Host=<%= @pqs %>
+
+# The listen port of Phoenix Query Server (Optional, Default: 8765)
 Port=8765
+
+# The HTTP Path of the Phoenix Query Server end point (Optional, Default: <blank>)
+HTTPPath=
+
+# The authentication type (Optional, Default: 0)
+# 0 = No Authentication
+# 1 = User Name and Password
+# 2 = Windows Azure HDInsight Service
+# 3 = Kerberos
+<% if @security == "false" -%>
+AuthType=0
+<% else -%>
+AuthMech=3
+<% end -%>
+
+# The user name (Required if AuthType is set to 1 or 2)
+UID=
+
+# The password (Required if AuthType is set to 1 or 2)
+PWD=
+
+# Enable/Disable SSL (Optional, Default: 0)
+# 0 = disable
+# 1 = enable
+SSL=0
+
+# Controls whether the driver allows the server's hostname and the Common Name (CN)
+# in the server SSL certificate to be different. (Optional, Default: 0)
+# 0 = not allow
+# 1 = allow
+AllowHostNameCNMismatch=0
+
+# Controls whether the driver allows self-signed server certificate. (Optional, Default: 0)
+# 0 = not allow
+# 1 = allow
+AllowSelfSignedServerCert=0
+
+# The PEM formatted file containing the CA certificates trusted by the driver.
+# (Optional, Default: /opt/hortonworks/phoenixodbc/lib/32/cacerts.pem)
+TrustedCerts=/opt/hortonworks/phoenixodbc/lib/32/cacerts.pem
+
+# The max number of result set rows for each fetch request. (Optional, Default: 10000)
+RowsFetchPerBlock=10000
