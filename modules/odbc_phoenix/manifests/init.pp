@@ -16,19 +16,19 @@
 class odbc_phoenix {
   $path="/sbin:/usr/sbin:/bin:/usr/bin"
 
-  $install_path="/opt/simba/phoenixodbc"
+  $install_path="/opt/hortonworks/phoenixodbc"
   $config_path="$install_path/Setup"
   $odbcini_path="$config_path/odbc.ini"
   $odbcinstini_path="$config_path/odbcinst.ini"
-  $driverini_path="$install_path/lib/64/simba.phoenixodbc.ini"
+  $driverini_path="$install_path/lib/64/hortonworks.phoenixodbc.ini"
 
   if ($operatingsystem == "centos") {
     package { [ "unixODBC", "unixODBC-devel", "cyrus-sasl-gssapi", "cyrus-sasl-plain" ]:
       ensure => installed,
       before => Exec["Download ODBC"],
     }
-    $version="1.0.0.0004"
-    $build="SimbaPhoenixODBC-64bit-$version"
+    $version="1.0.0.1000"
+    $build="HortonworksPhoenixODBC-64bit-$version"
     $rpmbase="$build-1"
     $rpm="$rpmbase.rpm"
     #$driver_url="http://public-repo-1.hortonworks.com/HDP/phoenix-odbc/$version/centos6/$rpm"
@@ -55,7 +55,7 @@ class odbc_phoenix {
       command => "rpm -i $rpm",
       cwd => "/tmp",
       path => "$path",
-      unless => "rpm -qa | grep SimbaPhoenixODBC",
+      unless => "rpm -qa | grep HortonworksPhoenixODBC",
       before => File["$config_path"],
       require => Exec["Download ODBC"],
     }
