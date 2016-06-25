@@ -17,8 +17,17 @@ echo -en "\033[31m"
 cat /vagrant/modules/hdp25_demos/hive/stored_procedure/addpartition.hplsql
 echo -en "\033[0m"
 
-read -p "Run the script"
+read -p "Query the initial state in MySQL"
+echo "select count(*) from hive.state" | mysql -uhive -pvagrant
+
+read -p "Look at the current partition structure"
+hdfs dfs -lsr /apps/hive/warehouse/citydata.db
+
+read -p "Run the HPL/SQL script"
 hplsql -f /vagrant/modules/hdp25_demos/hive/stored_procedure/addpartition.hplsql
 
-read -p "Query the state in MySQL"
+read -p "Look at the updated partition structure"
+hdfs dfs -lsr /apps/hive/warehouse/citydata.db
+
+read -p "Query the final state in MySQL"
 echo "select * from hive.state" | mysql -uhive -pvagrant
