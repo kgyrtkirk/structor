@@ -226,10 +226,9 @@ def fake_accounts(scale=1, child=0):
 #  2 smaller distributions for mobile
 def fake_multidevice(scale=1, child=0):
 	num_users = 20000
-	num_users = 2000
 	#num_journies = 250000
 	#num_journies = 1000
-	num_journies = 25000
+	num_journies = 50000
 	num_campaigns = 20
 	num_products = 1000
 	num_products = 100
@@ -247,7 +246,7 @@ set -x
 
 for f in campaigns clickstream sales users; do
 	hdfs dfs -mkdir -p /apps/hive/warehouse/multichannel.db/$f
-	hdfs dfs -copyFromLocal fake_$f* /apps/hive/warehouse/multichannel.db/$f
+	hdfs dfs -copyFromLocal -f fake_$f* /apps/hive/warehouse/multichannel.db/$f
 done
 """
 	with open("fake_load.sh", "w") as fd:
@@ -445,12 +444,12 @@ create table users(
 			else:
 				sale_chance *= 0.5
 
-			# If user is on mobile and campaign is not mobile optimized, lose 3/4. Otherwise, triple.
+			# If user is on mobile and campaign is not mobile optimized, lose 4/5. Otherwise, quadruple.
 			if platform == "mobile":
 				if campaign["mobile_optimized"] == True:
-					sale_chance *= 3.0
+					sale_chance *= 4.0
 				else:
-					sale_chance *= 0.25
+					sale_chance *= 0.20
 
 			# Increase conversion by up to 50% if we hit the optimal hour. Decay the further we are away.
 			hour_delta = abs(campaign["optimal_hour"] - (date_time.hour + date_time.minute / 60.0))
@@ -463,8 +462,8 @@ create table users(
 				platform = "desktop"
 				cookie_id = assign_cookie(cookies, user_id, platform)
 
-				# Advance time up to 8 hours. Access the same last product and purchase.
-				wait_time = random.uniform(1, 8)
+				# Advance time up to 7 hours. Access the same last product and purchase.
+				wait_time = random.uniform(1, 7)
 				wait_hours = int(wait_time)
 				wait_minutes = int((wait_time % 1) * 60)
 				click_time += timedelta(hours=wait_hours, minutes=wait_minutes)
