@@ -46,6 +46,16 @@ class tez_ui {
     ensure => file,
     content => template('tez_ui/configs.js.erb'),
   }
+  ->
+  file { "/var/www/html/tez-ui/config":
+    ensure => directory,
+    mode => '755',
+  }
+  ->
+  file { "/var/www/html/tez-ui/config/configs.env":
+    ensure => file,
+    content => template('tez_ui/configs.env.erb'),
+  }
 
   # Hive 2 Tez UI (if applicable)
   file { "/var/www/html/tez-ui2":
