@@ -12,9 +12,9 @@
   "domain": "example.com",
   "realm": "EXAMPLE.COM",
 
-  "clients" : [ "hdfs", "hive", "maven", "tez", "yarn", "zk" ],
+  "clients" : [ "hdfs", "hive", "maven", "spark", "tez", "yarn", "zk" ],
   "nodes": [
-    {"hostname": "druid2", "ip": "192.168.59.31",
+    {"hostname": "druid", "ip": "192.168.59.31",
      "roles": ["client",
                "druid-broker", "druid-coordinator", "druid-historical",
                "druid-middlemanager", "druid-overlord", "druid-pivot",
