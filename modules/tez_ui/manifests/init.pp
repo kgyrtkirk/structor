@@ -63,6 +63,11 @@ class tez_ui {
     mode => '755',
   }
   ->
+  file { "/var/www/html/tez-ui2/scripts":
+    ensure => directory,
+    mode => '755',
+  }
+  ->
   exec { "Extract the Tez2 UI WAR":
     command => "unzip /usr/hdp/$hdp_version/tez_hive2/ui/tez-ui-*.war",
     creates => "/var/www/html/tez-ui2/index.html",
