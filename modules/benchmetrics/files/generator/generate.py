@@ -1,8 +1,6 @@
 #!/usr/bin/python
 
-# You might need to sudo pip install fake-factory
-
-from faker import Factory
+# run setupGenerate.sh before trying this.
 
 import calendar
 import sys, math, random, time
@@ -23,7 +21,47 @@ os.environ['TZ']='UTC'
 
 basedir = os.path.dirname(__file__)
 
+from faker import Factory
 faker = Factory.create()
+
+class GeneratorOutput(object):
+	store = None
+	topic = None
+
+	@staticmethod
+	def factory(topic, child, extras):
+		if "kafka_producer" in extras:
+			return KafkaGeneratorOutput(topic, child)
+		else:
+			return FileGeneratorOutput(topic, child)
+
+class KafkaGeneratorOutput(GeneratorOutput):
+	store = None
+	topic = None
+
+	def __init__(self, topic, child):
+		self.store = extras["kafka_producer"]
+		self.topic = topic
+
+	def write(self, message):
+		self.store.send(self.topic, bytes(message))
+
+	def close(self):
+		self.store.flush()
+
+class FileGeneratorOutput(GeneratorOutput):
+	store = None
+
+	def __init__(self, topic, child):
+		file = topic + ".%09d.txt" % child
+		self.store = open(file, "w")
+
+	def write(self, message):
+		self.store.write(message)
+		return self.store.write("\n")
+
+	def close(self):
+		self.store.close()
 
 def parse_into(f, ttype, separator='|'):
 	return [ttype._make(l.strip().split(separator)) for l in open(f)]
@@ -134,7 +172,7 @@ def write_rows(f, rs):
 	for r in rs:
 		f.write('|'.join(map(str,r)) + "\n")
 
-def fake_accounts(scale=1, child=0):
+def fake_accounts(scale=1, child=0, extras=None):
 	global earliest_date
 
 	account_type = namedtuple('AccountType', ['account_code', 'account_type', 'account_subtype', 'account_subtype2', 'effective_date'])
@@ -224,13 +262,10 @@ def fake_accounts(scale=1, child=0):
 #  3 overlapping beta distributions
 #  1 large distribution centered at noon for desktop
 #  2 smaller distributions for mobile
-def fake_multidevice(scale=1, child=0):
-	num_users = 20000
-	#num_journies = 250000
-	#num_journies = 1000
-	num_journies = 50000
+def fake_multidevice(scale=1, child=0, extras=None):
+	num_users = 1000
+	num_journies = 20000
 	num_campaigns = 20
-	num_products = 1000
 	num_products = 100
 	base_desktop_sale_chance = 0.04
 	base_mobile_sale_chance = 0.01
@@ -254,9 +289,9 @@ done
 
 	# Table DDL
 	table_ddl = """
-drop database if exists multichannel cascade;
-create database multichannel;
-use multichannel;
+drop database if exists multidevice cascade;
+create database multidevice;
+use multidevice;
 
 create table campaigns(
 	campaign_id int,
@@ -272,8 +307,7 @@ create table clickstream(
 	product_id int,
 	campaign_id int,
 	cookie string,
-	platform string,
-	tracking_id_internal int
+	platform string
 ) row format delimited fields terminated by '|';
 
 create table sales(
@@ -281,8 +315,7 @@ create table sales(
 	customer_id int,
 	product_id int,
 	promotion_id int,
-	cookie string,
-	tracking_id_internal int
+	cookie string
 ) row format delimited fields terminated by '|';
 
 create table users(
@@ -310,18 +343,19 @@ create table users(
 			"optimal_hour"     : int(random.uniform(8, 18)),
 			"promoted_product" : int(random.uniform(0, num_products))
 		} )
-	output = open("fake_campaigns.%06d.txt" % child, "w")
+	output = GeneratorOutput.factory("fake_campaigns", child, extras)
 	for c in campaigns:
 		record = [ c["id"], c["sex_preference"], c["mobile_optimized"], c["optimal_hour"], c["promoted_product"] ]
 		record = [ str(x) for x in record ]
-		output.write('|'.join(record) + "\n")
+		output.write('|'.join(record))
 
 	# Break out of the sameness.
 	random.seed(child)
 
 	# Create users.
 	users = []
-	output = open("fake_users.%06d.txt" % child, "w")
+
+	output = GeneratorOutput.factory("fake_users", child, extras)
 	for i in xrange(0, num_users):
 		user_id = str(i + (num_users * child))
 		sex = random.choice(['M', 'F'])
@@ -338,7 +372,8 @@ create table users(
 		phone_cell = faker.phone_number()
 		record = [ user_id, name, sex, credit_card, addr_city, addr_state, addr_postal_code, email, phone_cell ]
 		users.append(record)
-		output.write('|'.join(record) + "\n")
+		output.write('|'.join(record))
+	output.close()
 
 	# Setup distributions.
 	numpy.random.seed(seed=child)
@@ -348,8 +383,6 @@ create table users(
 	time_distribution = scipy.stats.beta(2, 2)
 
 	# Create random journies.
-	clickstream_fd = open("fake_clickstream.%06d.txt" % child, "w")
-	sales_fd = open("fake_sales.%06d.txt" % child, "w")
 	cookies = {}
 	ip_addresses = {}
 	clicks = []
@@ -476,12 +509,17 @@ create table users(
 			sale = [ str(x) for x in sale ]
 			sales.append(sale)
 
+	# Persist what we've created.
 	sales.sort(key=lambda x: x[0])
+	sales_out = GeneratorOutput.factory("fake_sales", child, extras)
 	for s in sales:
-		sales_fd.write('|'.join(s) + "\n")
+		sales_out.write('|'.join(s))
 	clicks.sort(key=lambda x: x[0])
+	clickstream_out = GeneratorOutput.factory("fake_clickstream", child, extras)
 	for c in clicks:
-		clickstream_fd.write('|'.join(c) + "\n")
+		clickstream_out.write('|'.join(c))
+	sales_out.close()
+	clickstream_out.close()
 
 	print "Number of mobile switches", num_mobile_switches
 
@@ -505,7 +543,7 @@ def random_ip_address(user_id):
 # 2016-03-15^AID^Aclothing^A34^AF^Apromo-01^Arefer-01,12345,Y,26-35
 # 2016-03-15^ANY^Acomputers^A33^AM^Apromo-0-2^Arefer-0-2,23456,N,26-35
 # Generate 500k records per ID.
-def fake_omniture(scale=1, child=0):
+def fake_omniture(scale=1, child=0, extras=None):
 	if (child >= scale):
 		print "Argument mismatch: child too large for scale"
 		return 1
@@ -695,7 +733,7 @@ def fake_raw_timeseries(scale=1, child=0):
 			record = [ j, this_time, value ]
 			write_rows(table, [record])
 
-def fake_phoenix_timeseries(scale=1, child=0):
+def fake_phoenix_timeseries(scale=1, child=0, extras=None):
 	num_days = 7 * 8
 	record_interval_seconds = 15
 	records_per_hour = 3600 / record_interval_seconds
@@ -769,7 +807,7 @@ def fake_phoenix_timeseries(scale=1, child=0):
 		record.append(",".join(tags))
 		write_rows(table, [record])
 
-def fake_phoenix(scale=1, child=0):
+def fake_phoenix(scale=1, child=0, extras=None):
 	start_rows = 0
 	end_rows = 100
 	if (child >= scale):
@@ -807,7 +845,7 @@ def fake_phoenix(scale=1, child=0):
 		record.append(faker.boolean())
 		write_rows(tbl_alltypes, [record])
 
-def fake_allTypes(scale=1, child=0):
+def fake_allTypes(scale=1, child=0, extras=None):
 	start_rows = 0
 	end_rows = 100
 	if (child >= scale):
@@ -846,24 +884,47 @@ def fake_allTypes(scale=1, child=0):
 		    random_char_11, random_boolean, random_date, random_timestamp ]
 		write_rows(tbl_alltypes, [record])
 
+def usage(generators):
+	print "Need -w [{0}]".format(generators)
+	print "Usage: generate.py -w workload [-s scale] [-c child] [-k kafka_endpoint]"
+	print "Specify Kafka endpoints like: kafka.example.com:9092"
+	sys.exit(1)
+
 if __name__ == "__main__":
 	workload = None
-	opts, args = getopt(sys.argv[1:], "c:s:w:", ['child=', 'scale=', 'workload='])
+	generators = " | ".join([ x[5:] for x in locals().keys() if x.startswith("fake_") ])
+
+	try:
+		opts, args = getopt(sys.argv[1:], "c:k:s:w:", ['child=', 'scale=', 'workload='])
+	except Exception, e:
+		print e
+		usage(generators)
+
 	scale = 1
 	child = 0
+	kafka_endpoint = None
+	extras = {}
 	for (k,v) in opts:
-		if k in ['-s', '-scale']:
-			scale = int(v)
-		elif k in ['-c','-child']:
+		if k in ['-c','-child']:
 			child = int(v)
+		elif k in ['-k', '-kafka']:
+			kafka_endpoint = v
+		elif k in ['-s', '-scale']:
+			scale = int(v)
 		elif k in ['-w','-workload']:
 			workload = v
+		else:
+			usage(generators)
 
 	if workload == None:
-		generators = " | ".join([ x[5:] for x in locals().keys() if x.startswith("fake_") ])
-		assert False, "Need -w [{0}]".format(generators)
+		usage(generators)
+
+	if kafka_endpoint != None:
+		import kafka
+		producer = kafka.KafkaProducer(bootstrap_servers=kafka_endpoint)
+		extras["kafka_producer"] = producer
 
 	workload = "fake_" + workload
 	function = locals()[workload]
-	ret = function(scale, child)
+	ret = function(scale, child, extras)
 	sys.exit(ret)
