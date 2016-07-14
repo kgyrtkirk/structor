@@ -23,8 +23,17 @@ class os_performance {
     replace => true,
   }
 
+  case $operatingsystem {
+    'centos': {
+      $target = "/etc/rc.d/rc.local"
+    }
+    'ubuntu': {
+      $target = "/etc/rc.local"
+    }
+  }
+
   # Disable THP on boot.
-  file { "/etc/rc.d/rc.local":
+  file { "$target":
     ensure => 'file',
     source => 'puppet:///modules/os_performance/rc.local',
     replace => true,
