@@ -227,6 +227,11 @@
   </property>
 
   <property>
+    <name>hive.auto.convert.join.noconditionaltask.size</name>
+    <value><%= @client_mem.to_i * 1024 * 1024 / 4 %></value>
+  </property>
+
+  <property>
     <name>hive.auto.convert.sortmerge.join</name>
     <value>true</value>
   </property>
