@@ -25,7 +25,7 @@ class hive2_llap {
 
   # LLAP Sizing:
   # LLAP will take up all YARN memory minus 1 GB (including Slider AM overhead of 0.5 GB)
-  #   First: Try to set number of executors = number of CPUs.
+  #   First: Try to set number of executors = number of CPUs - 2.
   #   If we have memory left over, we take the rest up with cache.
   #   Note this only allows 2 concurrent queries (2 AMs)
   if ($vm_mem+0 <= 2048) {
@@ -36,19 +36,16 @@ class hive2_llap {
     $yarn_total = $vm_mem - 4096
   }
 
-  # Note: These computations assume <16 GB VMs.
   $max_queries = 2
   $am_size = $am_mem+0
   $slider_am_overhead = 512
   $gc_anti_slop = 512
-  $num_executors = $vm_cpus+0
+  $num_executors = $vm_cpus-2
   $total_am_overhead       = ($am_size * $max_queries) + $slider_am_overhead
   $full_executor_allotment = ($client_mem+0) * $num_executors
   $llap_yarn_size          = $yarn_total - $total_am_overhead
   if ($full_executor_allotment > $llap_yarn_size) {
-    # Not enough capacity, try it with half the number of executors.
-    $num_executors = $num_executors / 2
-    $full_executor_allotment = $client_mem+0 * $num_executors
+    fail("Can't satisfy this VM configuration, need more memory")
   }
   $cache_size = $llap_yarn_size - $full_executor_allotment
   $xmx_size   = $full_executor_allotment - $gc_anti_slop
