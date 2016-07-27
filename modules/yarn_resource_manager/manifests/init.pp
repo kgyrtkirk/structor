@@ -17,7 +17,7 @@ class yarn_resource_manager {
   require yarn_client
   require hadoop_server
 
-  $path="/usr/bin"
+  $path="/bin:/usr/bin"
   $yarn_component = "hadoop-yarn-resourcemanager"
   $mapreduce_component = "hadoop-mapreduce-historyserver"
 
@@ -61,6 +61,18 @@ class yarn_resource_manager {
   exec { "hdp-select set hadoop-yarn-resourcemanager ${hdp_version}":
     cwd => "/",
     path => "$path",
+  }
+  ->
+  exec { "hdfs dfs -mkdir /tmp/entity-file-history":
+    cwd => "/",
+    path => "$path",
+    user => "yarn",
+  }
+  ->
+  exec { "hdfs dfs -touchz /tmp/entity-file-history/active":
+    cwd => "/",
+    path => "$path",
+    user => "yarn",
   }
   ->
   service {"hadoop-yarn-resourcemanager":
