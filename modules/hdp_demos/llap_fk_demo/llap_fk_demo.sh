@@ -39,4 +39,5 @@ hive -d DB=tpch_bin_flat_orc_$SCALE -d FILE=orc -d SOURCE=tpch_text_$SCALE -f /v
 echo "Loading PK/FK"
 beeline -u jdbc:hive2://llap.example.com:10000/tpch_bin_flat_orc_$SCALE -f /vagrant/modules/benchmetrics/files/tpc/tpch/ddl/bin_flat/add_constraints.sql
 
+rm -rf /tmp/llap
 echo "Done, launch LLAP and connect BI tool to port 10000"
