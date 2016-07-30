@@ -94,7 +94,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     package_version = "_" + (hdp_version.gsub /[.-]/, '_')
     platform_start_script_path = "rc.d/init.d"
   elsif (profile[:os] == "centos7")
-    config.vm.box = "puppetlabs/centos-7.0-64-puppet"
+    config.vm.box = "puppetlabs/centos-7.2-64-puppet"
     package_version = "_" + (hdp_version.gsub /[.-]/, '_')
     platform_start_script_path = "rc.d/init.d"
   elsif (profile[:os] == "ubuntu14")
