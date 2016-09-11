@@ -39,6 +39,7 @@ class hive2_llap {
   $max_queries = 2
   $am_size = $am_mem+0
   $slider_am_overhead = 512
+  $extra_allowance = 512
   $gc_anti_slop = 512
   $num_executors = $vm_cpus-2
   $total_am_overhead       = ($am_size * $max_queries) + $slider_am_overhead
@@ -47,7 +48,7 @@ class hive2_llap {
   if ($full_executor_allotment > $llap_yarn_size) {
     fail("Can't satisfy this VM configuration, need more memory")
   }
-  $cache_size = $llap_yarn_size - $full_executor_allotment
+  $cache_size = $llap_yarn_size - $full_executor_allotment - $extra_allowance
   $xmx_size   = $full_executor_allotment - $gc_anti_slop
 
   # Extra security related setup.
