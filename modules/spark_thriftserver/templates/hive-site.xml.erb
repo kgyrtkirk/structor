@@ -1,0 +1,39 @@
+<% @metastores =
+     eval(@nodes).select {|node| node[:roles].include? 'hive-meta'}.
+       map {|node| node[:hostname]};
+ -%>
+
+  <configuration>
+    
+    <property>
+      <name>hive.metastore.client.connect.retry.delay</name>
+      <value>5</value>
+    </property>
+    
+    <property>
+      <name>hive.metastore.client.socket.timeout</name>
+      <value>1800</value>
+    </property>
+    
+    <property>
+      <name>hive.metastore.uris</name>
+      <value><%= @metastores.map {|host| "thrift://" + host + "." + @domain +
+                                ":9083"}.join(',')%></value>
+    </property>
+    
+    <property>
+      <name>hive.server2.enable.doAs</name>
+      <value>false</value>
+    </property>
+    
+    <property>
+      <name>hive.server2.thrift.port</name>
+      <value>10015</value>
+    </property>
+    
+    <property>
+      <name>hive.server2.transport.mode</name>
+      <value>binary</value>
+    </property>
+    
+  </configuration>
