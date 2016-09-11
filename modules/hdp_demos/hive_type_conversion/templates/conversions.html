@@ -1,0 +1,68 @@
+{% block body %}
+
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script type='text/javascript'>
+
+google.charts.load('current', {packages: ['table']});
+google.charts.setOnLoadCallback(drawTable);
+
+function drawTable() {
+  var data = new google.visualization.DataTable();
+  {% for c in header %}
+    data.addColumn('string', '{{ c }}');
+  {% endfor %}
+  data.addRows([
+    {% for r in rows %}
+      [{{ r | safe }}],
+    {% endfor %}
+  ]);
+  var table = new google.visualization.Table(document.getElementById('table_div'));
+  table.draw(data);
+}
+
+</script>
+
+<style>
+.vertical{
+    writing-mode:tb-rl;
+    white-space:nowrap;
+    display:block;
+    width:20px;
+}
+
+.fontcolor{
+    font-weight: bold;
+    font-family: sans-serif;
+    background-color: #e7e9f9;
+}
+
+.header{
+    font-weight: bold;
+    font-family: sans-serif;
+    background-color: #e7e9f9;
+    font-size: 20px;
+}
+</style>
+
+</head>
+<body>
+
+<table>
+<tr>
+  <td class="header" align="center" colspan="2">Hive Implicit Type Conversions: {{ version }}</td>
+</tr>
+<tr>
+  <td></td>
+  <td class="fontcolor">Target Type</td>
+<tr>
+  <td class="vertical fontcolor">Source Type</td>
+  <td><div id="table_div"></div></td>
+</tr>
+</table>
+</body>
+</html>
+
+{% endblock %}
