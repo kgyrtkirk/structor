@@ -27,44 +27,34 @@ class odbc_client {
       before => Exec["Download ODBC"],
     }
     if ($operatingsystemmajrelease == "6") {
-      $version="2.0.5.1005"
+      $version="2.1.5.1006"
       $build="hive-odbc-native-$version"
       $rpmbase="$build-1.el6.x86_64"
       $rpm="$rpmbase.rpm"
       $driver_url="http://public-repo-1.hortonworks.com/HDP/hive-odbc/$version/centos6/$rpm"
-      $expected_sums="expected_sums_odbc_centos6.txt"
     } else {
-      $version="2.1.4.1004"
+      $version="2.1.5.1006"
       $build="hive-odbc-native-$version"
       $rpmbase="$build-1.el7.x86_64"
       $rpm="$rpmbase.rpm"
-      #$driver_url="http://public-repo-1.hortonworks.com/HDP/hive-odbc/$version/centos6/$rpm"
-      $driver_url="file:///vagrant/hive-odbc-native-2.1.4.1004-1.el7.x86_64.rpm"
-      $expected_sums="expected_sums_odbc_centos7.txt"
+      $driver_url="http://public-repo-1.hortonworks.com/HDP/hive-odbc/$version/centos7/$rpm"
     }
   } else {
     package { [ "unixodbc", "unixodbc-dev", "libsasl2-modules-gssapi-mit" ]:
       ensure => installed,
       before => Exec["Download ODBC"],
     }
-    $version="2.0.5.1005"
+    $version="2.1.5.1006"
     $build="hive-odbc-native_$version"
     $rpmbase="$build-2_amd64"
     $rpm="$rpmbase.deb"
     $driver_url="http://public-repo-1.hortonworks.com/HDP/hive-odbc/$version/debian/$rpm"
-    $expected_sums="expected_sums_odbc_ubuntu.txt"
   }
 
-  file { "/tmp/expected_sums_odbc.txt":
-    ensure => file,
-    source => "puppet:///modules/odbc_client/$expected_sums",
-  }
-  ->
   exec { "Download ODBC":
-    command => "curl -O $driver_url",
+    command => "curl -C - -O $driver_url",
     cwd => "/tmp",
     path => "$path",
-    unless => "md5sum -c expected_sums_odbc.txt --quiet",
   }
 
   if ($operatingsystem == "centos") {
