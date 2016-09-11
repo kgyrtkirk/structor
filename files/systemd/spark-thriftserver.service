@@ -1,0 +1,12 @@
+[Unit]
+Description=Spark Thrift Service
+After=syslog.target network.target remote-fs.target nss-lookup.target
+
+[Service]
+ExecStart=/usr/hdp/current/spark-thriftserver/sbin/start-thriftserver.sh --properties-file /usr/hdp/current/spark-thriftserver/conf/spark-thrift-sparkconf.conf
+Restart=always
+Type=forking
+User=hive
+
+[Install]
+WantedBy=multi-user.target
