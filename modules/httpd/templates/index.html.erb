@@ -25,6 +25,8 @@
        }.map{|node| node[:hostname] + "." + @domain};
    @tez = eval(@nodes).select {|node| node[:roles].include? 'tez-ui'
        }.map{|node| node[:hostname] + "." + @domain};
+   @xmondrian = eval(@nodes).select {|node| node[:roles].include? 'xmondrian'
+       }.map{|node| node[:hostname] + "." + @domain};
    @yarn = eval(@nodes).select {|node| node[:roles].include? 'yarn'
        }.map{|node| node[:hostname] + "." + @domain};
   -%>
@@ -65,6 +67,9 @@ Useful links:
 <% if @hive2_server2.length > 0 -%>
   <li><a href="http://<%= @tez[0] %>:80/tez-ui2/">Tez UI (Hive 2)</a></li>
   <li><a href="http://<%= @hive2_server2[0] %>:10002/">HiveServer2 UI</a></li>
+<% end -%>
+<% if @xmondrian.length > 0 -%>
+  <li><a href="http://<%= @xmondrian[0] %>:8080/xmondrian">XMondrian</a></li>
 <% end -%>
 <% if @yarn.length > 0 -%>
   <li><a href="http://<%= @yarn[0] %>:8088/">YARN Resource Manager</a></li>
