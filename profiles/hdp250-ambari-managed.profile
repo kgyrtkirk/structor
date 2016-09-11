@@ -1,4 +1,5 @@
 {
+  "os": "centos7",
   "hdp_short_version": "2.5.0",
   "ambari_version": "2.4.0.0",
   "wtf": "YFW Ambari never bothered to fix compatibility with OpenJDK 7",

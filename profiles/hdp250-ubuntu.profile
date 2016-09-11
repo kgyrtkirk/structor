@@ -8,7 +8,7 @@
   "server_mem": 768,
   "client_mem": 1024,
 
-  "security": false,
+  "security": true,
   "domain": "example.com",
   "realm": "EXAMPLE.COM",
 
@@ -16,7 +16,7 @@
   "nodes": [
     {"hostname": "hdp250-ubuntu", "ip": "192.168.59.11",
      "roles": ["client", "hbase-master", "hbase-regionserver", "hive-db", "hive-meta",
-               "hive-server2", "nn", "slave", "yarn", "yarn-timelineserver", "zk"]}
+               "hive-server2", "kdc", "nn", "slave", "yarn", "yarn-timelineserver", "zk"]}
   ],
 
   "hive_options" : "interactive",
