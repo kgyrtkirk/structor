@@ -18,8 +18,8 @@ class hdfs_namenode {
   require hadoop_server
 
   $path="/bin:/usr/bin"
-  $dirs="/user/yarn /user/yarn/history /user/yarn/app-logs /user/vagrant /user/druid /user/hive /user/oozie /user/admin /user/ambari /apps/hive/warehouse /apps/hbase /apps/druid /tmp /hdp/apps/${hdp_version}/mapreduce /hdp/apps/${hdp_version}/tez /hdp/apps/${hdp_version}/pig /hdp/apps/${hdp_version}/hive"
-  $mode177_dirs="/user/yarn/app-logs /apps/hive/warehouse /apps/hbase /tmp"
+  $dirs="/user/yarn /user/yarn/history /user/yarn/app-logs /user/vagrant /user/druid /user/hive /user/oozie /user/admin /user/ambari /apps/hive/warehouse /apps/hbase /apps/druid /tmp /hdp/apps/${hdp_version}/mapreduce /hdp/apps/${hdp_version}/tez /hdp/apps/${hdp_version}/pig /hdp/apps/${hdp_version}/hive /user/spark/spark-history"
+  $mode177_dirs="/user/yarn/app-logs /user/spark/spark-history /apps/hive/warehouse /apps/hbase /tmp"
 
   $component = "hadoop-hdfs-namenode"
   if ($hdp_version_major+0 <= 2 and $hdp_version_minor+0 <= 2) {
@@ -132,6 +132,12 @@ class hdfs_namenode {
   ->
   exec {"admin-home-chown":
     command => "hadoop fs -chown admin:admin /user/admin",
+    path => "$path",
+    user => "hdfs",
+  }
+  ->
+  exec {"spark-home-chown":
+    command => "hadoop fs -chown spark:hadoop /user/spark",
     path => "$path",
     user => "hdfs",
   }
