@@ -41,6 +41,11 @@ class yarn_resource_manager {
       mode => '400',
     }
     ->
+    exec { "kinit -k -t ${hdfs_client::keytab_dir}/rm.keytab rm/${hostname}.${domain}":
+      path => $path,
+      user => yarn,
+    }
+    ->
     Package["hadoop${package_version}-mapreduce-historyserver"]
 
     file { "${hdfs_client::keytab_dir}/jhs.keytab":
@@ -63,7 +68,7 @@ class yarn_resource_manager {
     path => "$path",
   }
   ->
-  exec { "hdfs dfs -mkdir /tmp/entity-file-history":
+  exec { "hdfs dfs -mkdir -p /tmp/entity-file-history":
     cwd => "/",
     path => "$path",
     user => "yarn",
