@@ -60,11 +60,11 @@ class druid_overlord {
     group => vagrant,
     source => "puppet:///modules/druid_overlord/wikiticker-index-hdfs.json",
   }
-  file { "/home/vagrant/sampleTpchIndexWiki.sh":
+  file { "/home/vagrant/sampleTpch.sh":
     ensure => file,
     owner => vagrant,
     group => vagrant,
-    content => template("druid_overlord/sampleTpchIndexWiki.sh.erb"),
+    content => template("druid_overlord/sampleTpch.sh.erb"),
   }
   file { "/home/vagrant/tpch-index-hdfs.json":
     ensure => file,
