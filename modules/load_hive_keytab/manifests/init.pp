@@ -14,6 +14,8 @@
 #   limitations under the License.
 
 class load_hive_keytab {
+  require hive_keytab
+
   $path="/bin:/usr/bin"
 
   exec { "kinit -k -t ${hdfs_client::keytab_dir}/hive.keytab hive/${hostname}.${domain}":
