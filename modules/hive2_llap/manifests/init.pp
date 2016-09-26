@@ -17,7 +17,7 @@ class hive2_llap {
   require hive2
   require slider
 
-  $path="/bin:/usr/bin"
+  $path="/bin:/usr/bin:/usr/sbin"
 
   if $security == "true" {
     require load_hive_keytab
@@ -53,7 +53,31 @@ class hive2_llap {
 
   # Extra security related setup.
   if $security == "true" {
-    $security_args = "--slider-keytab hive.keytab --slider-keytab-dir .slider/keytabs/llap --slider-principal hive/llap-secure.example.com@EXAMPLE.COM"
+    # Deal with slider overhead. XXX: Realm is hardcoded.
+    $security_args = "--slider-keytab hive.headless.keytab --slider-keytab-dir .slider/keytabs/hive --slider-principal hive@EXAMPLE.COM"
+    exec { "Create headless Hive principal for Slider":
+      command => "kadmin.local -q 'addprinc -randkey hive@EXAMPLE.COM'",
+      cwd => "/etc/security/hadoop",
+      path => $path,
+    } ->
+    exec { "Generate extra keytab for slider":
+      command => 'kadmin.local -q "xst -norandkey -k hive.headless.keytab hive@EXAMPLE.COM"',
+      cwd => "/etc/security/hadoop",
+      path => $path,
+      creates => "/etc/security/hadoop/hive.headless.keytab",
+    } ->
+    file { "/etc/security/hadoop/hive.headless.keytab":
+      ensure => file,
+      owner => hive,
+      group => hadoop,
+      mode => '400',
+    } ->
+    exec { "Install extra slider keytab":
+      command => "slider install-keytab --keytab hive.headless.keytab --folder hive --overwrite",
+      cwd => "/etc/security/hadoop",
+      path => $path,
+      user => "hive",
+    }
   } else {
     $security_args = ""
   }

@@ -58,17 +58,12 @@
   </property>
 
   <property>
-    <name>hive.llap.object.cache.enabled</name>
-    <value>true</value>
-  </property>
-
-  <property>
-    <name>hive.tez.input.generate.consistent.splits</name>
-    <value>true</value>
-  </property>
-
-  <property>
     <name>hive.llap.client.consistent.splits</name>
+    <value>true</value>
+  </property>
+
+  <property>
+    <name>hive.llap.object.cache.enabled</name>
     <value>true</value>
   </property>
 
@@ -78,13 +73,13 @@
   </property>
 
   <property>
-    <name>hive.exec.orc.split.strategy</name>
-    <value>BI</value>
+    <name>hive.tez.input.generate.consistent.splits</name>
+    <value>true</value>
   </property>
 
   <property>
-    <name>hive.llap.daemon.allow.permanent.fns</name>
-    <value>false</value>
+    <name>hive.exec.orc.split.strategy</name>
+    <value>BI</value>
   </property>
 
   <property>
@@ -132,6 +127,36 @@
   <property>
     <name>hive.server2.authentication.kerberos.principal</name>
     <value>hive/_HOST@<%= @realm %></value>
+  </property>
+
+  <property>
+     <name>hive.llap.daemon.keytab.file</name>
+     <value>/etc/security/hadoop/hive.keytab</value>
+  </property>
+
+  <property>
+     <name>hive.llap.daemon.service.principal</name>
+     <value>hive/_HOST@<%= @realm %></value>
+  </property>
+
+  <property>
+    <name>hive.llap.validate.acls</name>
+    <value>false</value>
+  </property>
+
+  <property>
+     <name>hive.llap.zk.sm.principal</name>
+     <value>hive@EXAMPLE.COM</value>
+  </property>
+
+  <property>
+     <name>hive.llap.zk.sm.keytab.file</name>
+     <value>/etc/security/hadoop/hive.headless.keytab</value>
+  </property>
+
+  <property>
+     <name>hive.llap.zk.sm.connectionString</name>
+     <value><%= @zookeeper_servers %></value>
   </property>
 <% end -%>
 
