@@ -4,13 +4,16 @@
                   }[0][:hostname] + "." + @domain;
  -%>
 
-DATA=/usr/local/share/druid/quickstart/wikiticker-2015-09-12-sampled.json
+DATA=wikiticker-2015-09-12-sampled.json
+DATAGZ=/usr/hdp/current/druid/quickstart/wikiticker-2015-09-12-sampled.json.gz
 SPEC=/home/vagrant/wikiticker-index-hdfs.json
 HDFS_PATH=/user/vagrant
-POST_INDEX_TASK=/usr/local/share/druid/bin/post-index-task
+POST_INDEX_TASK=/vagrant/modules/druid_coordinator/files/post-index-task
 
 echo "Copying data to HDFS"
-hdfs dfs -copyFromLocal $DATA $HDFS_PATH
+cp $DATAGZ ~
+gunzip $DATA
+hdfs dfs -copyFromLocal ~/$DATA $HDFS_PATH
 
 echo "Submitting index task"
 $POST_INDEX_TASK --url http://<%= @overlord %>:8090/ --file $SPEC

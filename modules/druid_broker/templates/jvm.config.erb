@@ -1,6 +1,7 @@
 -server
 -Xms<%= @client_mem.to_i %>m
 -Xmx<%= @client_mem.to_i %>m
+-XX:MaxDirectMemorySize=4g
 -Duser.timezone=UTC
 -Dfile.encoding=UTF-8
 -Djava.io.tmpdir=var/tmp

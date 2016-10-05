@@ -18,20 +18,10 @@ class druid_broker {
 
   # Configuration files.
   $component="broker"
-  file { "/usr/local/share/druid/conf/druid/$component/jvm.config":
+  file { "/etc/druid/conf/druid/$component/jvm.config":
     ensure => file,
     content => template("druid_$component/jvm.config.erb"),
-    before => Service["druid-broker"],
-  }
-  file { "/usr/local/share/druid/conf/druid/$component/runtime.properties":
-    ensure => file,
-    content => template("druid_$component/runtime.properties.erb"),
-    before => Service["druid-broker"],
-  }
-  file { "/usr/local/share/druid/conf/druid/$component/main.config":
-    ensure => file,
-    source => "puppet:///modules/druid_$component/main.config",
-    before => Service["druid-broker"],
+    before => Service["druid-$component"],
   }
 
   # Startup.

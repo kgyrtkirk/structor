@@ -16,11 +16,6 @@
 class druid_base {
   require zookeeper_client
 
-  $druid_version="1.1.1"
-  $druid_base="imply-$druid_version"
-  $druid_home="/usr/local/share/$druid_base"
-  $path="/bin:/usr/bin:/usr/sbin"
-
   # Install Node.
   exec { "curl --silent --location https://rpm.nodesource.com/setup_4.x | sudo bash -":
     cwd => "/",
@@ -33,63 +28,62 @@ class druid_base {
   }
 
   # Install Druid.
-  exec { "tar -C /usr/local/share -zxf /vagrant/$druid_base.tar.gz":
+  exec { "rpm -ivh /vagrant/druid.rpm --nodeps":
     cwd => "/",
     path => "$path",
-    creates => "$druid_home",
-  }
-  ->
-  file { "/usr/local/share/druid":
-    ensure => "link",
-    target => "$druid_home",
-  }
-  ->
-  exec { "adduser druid":
-    cwd => "/",
-    path => "$path",
-    unless => "id -u druid",
-  }
-  ->
-  exec { "chown -fR druid:druid $druid_home":
-    cwd => "/",
-    path => "$path",
-  }
-  ->
-  file { "/var/log/druid":
-    ensure => 'directory',
-    owner => druid,
-    group => druid,
-    mode => '755',
-  }
-  ->
-  file { "/usr/local/share/druid/conf/druid/_common/common.runtime.properties":
-    ensure => file,
-    content => template("druid_base/common.runtime.properties.erb"),
+    creates => "/etc/druid/conf",
   }
 
-  # Hadoop files.
-  exec { "Install Hadoop configuration":
-    command => "cp /etc/hadoop/conf/core-site.xml /etc/hadoop/conf/hdfs-site.xml /etc/hadoop/conf/mapred-site.xml /etc/hadoop/conf/yarn-site.xml /usr/local/share/druid/conf/druid/_common",
-    cwd => "/",
-    path => "$path",
-    require => File["/usr/local/share/druid"],
+  # Create a link in current and overwrite some files.
+  $version="2.6.0.0-65"
+  file { "/usr/hdp/current/druid":
+    ensure => "link",
+    target => "/usr/hdp/$version/druid",
+  } ->
+  file { "/usr/hdp/current/druid/bin/node.sh":
+    ensure => file,
+    source => 'puppet:///modules/druid_base/node.sh',
+  } ->
+  file { "/usr/hdp/current/druid/conf/druid/_common/common.runtime.properties":
+    ensure => file,
+    content => template('druid_base/common.runtime.properties.erb'),
+  } ->
+  file { "/usr/hdp/current/druid/var":
+    ensure => directory,
+    owner => "druid",
+    group => "druid",
+  } ->
+  file { "/usr/hdp/current/druid/var/druid":
+    ensure => directory,
+    owner => "druid",
+    group => "druid",
+  } ->
+  file { "/var/run/druid":
+    ensure => "directory",
+    owner => "druid",
+    group => "druid",
+  } ->
+  file { "/usr/hdp/current/druid/extensions/druid-hdfs-storage/hadoop-lzo.jar":
+    ensure => link,
+    target => "/usr/hdp/${hdp_version}/hadoop/lib/hadoop-lzo-0.6.0.${hdp_version}.jar",
   }
-  ->
-  exec {"Substitute HDP Version mapred":
-    command => "sed -i~ 's@\${hdp.version}@$hdp_version@g' mapred-site.xml",
-    cwd => "/usr/local/share/druid/conf/druid/_common",
-    path => $path,
-  }
-  ->
-  exec {"Substitute HDP Version YARN":
-    command => "sed -i~ 's@\${hdp.version}@$hdp_version@g' yarn-site.xml",
-    cwd => "/usr/local/share/druid/conf/druid/_common",
-    path => $path,
-  }
-  ->
-  exec { "Eliminate LZO":
-    command => "sh /vagrant/modules/druid_base/files/eliminateLZO.sh",
-    cwd => "/tmp",
-    path => $path,
+
+  # Copy in the site XMLs.
+  # Hope to get rid of this at some point.
+  file { "/etc/druid/conf/druid/_common/core-site.xml":
+    ensure => file,
+    source => '/etc/hadoop/conf/core-site.xml',
+  } ->
+  file { "/etc/druid/conf/druid/_common/hdfs-site.xml":
+    ensure => file,
+    source => '/etc/hadoop/conf/hdfs-site.xml',
+  } ->
+  file { "/etc/druid/conf/druid/_common/mapred-site.xml":
+    ensure => file,
+    source => '/etc/hadoop/conf/mapred-site.xml',
+  } ->
+  file { "/etc/druid/conf/druid/_common/yarn-site.xml":
+    ensure => file,
+    source => '/etc/hadoop/conf/yarn-site.xml',
   }
 }
