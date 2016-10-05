@@ -3,12 +3,12 @@ Description=Druid Broker
 After=syslog.target network.target remote-fs.target nss-lookup.target
 
 [Service]
-ExecStart=/usr/local/share/druid/bin/run-druid broker
+ExecStart=/usr/hdp/current/druid/bin/broker.sh start
 Group=druid
 Restart=always
-Type=simple
+Type=forking
 User=druid
-WorkingDirectory=/usr/local/share/druid/dist/druid
+WorkingDirectory=/usr/hdp/current/druid
 
 [Install]
 WantedBy=multi-user.target
