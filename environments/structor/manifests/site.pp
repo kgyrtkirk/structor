@@ -103,9 +103,6 @@ if hasrole($roles, 'client') {
 }
 
 # Various Druid roles.
-if hasrole($roles, 'druid-bard') {
-  include druid_bard
-}
 if hasrole($roles, 'druid-broker') {
   include druid_broker
 }
@@ -123,6 +120,12 @@ if hasrole($roles, 'druid-overlord') {
 }
 if hasrole($roles, 'druid-pivot') {
   include druid_pivot
+}
+if hasrole($roles, 'druid-realtime') {
+  include druid_realtime
+}
+if hasrole($roles, 'druid-tranquility') {
+  include druid_tranquility
 }
 
 if hasrole($roles, 'flume-server') {
