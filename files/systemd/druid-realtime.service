@@ -1,0 +1,14 @@
+[Unit]
+Description=Druid Realtime Node
+After=syslog.target network.target remote-fs.target nss-lookup.target
+
+[Service]
+ExecStart=/usr/hdp/current/druid-realtime/bin/realtime.sh start
+Group=druid
+Restart=always
+Type=forking
+User=druid
+WorkingDirectory=/usr/hdp/current/druid-realtime
+
+[Install]
+WantedBy=multi-user.target

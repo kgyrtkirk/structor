@@ -1,0 +1,7 @@
+#!/bin/sh
+
+<%
+ @overlord = eval(@nodes).select {|node| node[:roles].include? 'druid-overlord'}[0][:hostname] + "." + @domain;
+-%>
+
+curl -X POST -H 'Content-Type: application/json' -d @/home/vagrant/wikiticker-kafka-supervisor-spec.json http://<%= @overlord %>:8090/druid/indexer/v1/supervisor

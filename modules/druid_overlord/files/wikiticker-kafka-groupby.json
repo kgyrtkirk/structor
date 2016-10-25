@@ -1,0 +1,23 @@
+{
+  "queryType": "topN",
+  "dataSource": "wikiticker-kafka",
+  "dimension": "countryName",
+  "threshold": 5,
+  "metric": "chars_added",
+  "granularity": "fifteen_minute",
+  "intervals": [ "2016-01-01/2020-12-31" ],
+  "granularity": "fifteen_minute",
+  "filter": {
+    "type": "not",
+    "field":
+      {
+        "type": "selector",
+        "dimension": "countryName",
+        "value": ""
+      }
+  },
+  "aggregations": [
+    {"type": "longSum", "fieldName": "count", "name": "edit_count"},
+    {"type": "doubleSum", "fieldName": "added", "name": "chars_added"}
+  ]
+}

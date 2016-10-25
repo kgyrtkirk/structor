@@ -1,0 +1,14 @@
+[Unit]
+Description=Druid Tranquility Server
+After=syslog.target network.target remote-fs.target nss-lookup.target
+
+[Service]
+ExecStart=/usr/local/tranquility/bin/tranquility server -configFile /etc/druid/conf/tranquility/server.json
+Group=druid
+Restart=always
+Type=simple
+User=druid
+WorkingDirectory=/
+
+[Install]
+WantedBy=multi-user.target

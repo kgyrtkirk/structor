@@ -1,0 +1,24 @@
+#!/bin/sh
+
+<%
+ @overlord = eval(@nodes).select {|node| node[:roles].include? 'druid-overlord'}[0][:hostname] + "." + @domain;
+ @broker   = eval(@nodes).select {|node| node[:roles].include? 'druid-broker'}[0][:hostname] + "." + @domain;
+-%>
+
+# Get some helper stuff.
+mkdir ~/quickstart
+cd ~/quickstart
+curl -C - -O https://static.imply.io/quickstart/wikiticker-0.4.tar.gz
+tar -zxf wikiticker-0.4.tar.gz
+
+# Start ingestion into Kafka.
+/home/vagrant/quickstart/wikiticker-0.4/bin/wikiticker -out kafka >/dev/null &
+
+# Start a supervisor task.
+curl -X POST -H 'Content-Type: application/json' -d @/home/vagrant/wikiticker-kafka/wikiticker-kafka-supervisor-spec.json http://<%= @overlord %>:8090/druid/indexer/v1/supervisor
+
+# Query the data every 15 seconds.
+while [ 1 -gt 0 ]; do
+	sleep 15
+	curl -L -H'Content-Type: application/json' -XPOST --data-binary @/vagrant/modules/druid_overlord/files/wikiticker-kafka-groupby.json http://druid.example.com:8082/druid/v2/?pretty
+done
