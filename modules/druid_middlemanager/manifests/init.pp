@@ -16,6 +16,7 @@
 class druid_middlemanager {
   require druid_base
   require yarn_client
+  $path="/bin:/sbin:/usr/bin:/usr/sbin"
 
   # Configuration files.
   $component="middleManager"
@@ -28,6 +29,13 @@ class druid_middlemanager {
     ensure => file,
     content => template("druid_middlemanager/runtime.properties.erb"),
     before => Service["druid-$component"],
+  }
+
+  # Link.
+  exec { "hdp-select set druid-middlemanager ${hdp_version}":
+    cwd => "/",
+    path => "$path",
+    before => Service["druid-middleManager"],
   }
 
   # Startup.

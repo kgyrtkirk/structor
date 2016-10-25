@@ -1,6 +1,6 @@
 {
   "os": "centos7",
-  "hdp_short_version": "2.5.0",
+  "hdp_short_version": "2.6.0",
   "vm_mem": 12288,
   "vm_cpus": 4,
 
@@ -12,14 +12,14 @@
   "domain": "example.com",
   "realm": "EXAMPLE.COM",
 
-  "clients" : [ "hdfs", "hive", "spark", "tez", "yarn", "zk" ],
+  "clients" : [ "hdfs", "hive", "hive2", "spark", "tez", "yarn", "zk" ],
   "nodes": [
     {"hostname": "druid", "ip": "192.168.59.31",
      "roles": ["client",
                "druid-broker", "druid-coordinator", "druid-historical",
                "druid-middlemanager", "druid-overlord",
-               "hive-db", "hive-meta", "hive-server2", "httpd",
-               "kafka", "nn", "slave", "spark-thriftserver",
+               "hive2", "hive2-server2", "hive-db", "hive-meta",
+               "httpd", "kafka", "nn", "slave",
                "yarn", "yarn-timelineserver", "zk"]}
   ],
 

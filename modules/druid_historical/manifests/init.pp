@@ -15,6 +15,7 @@
 
 class druid_historical {
   require druid_base
+  $path="/bin:/sbin:/usr/bin:/usr/sbin"
 
   # Configuration files.
   $component="historical"
@@ -22,6 +23,13 @@ class druid_historical {
     ensure => file,
     content => template("druid_$component/jvm.config.erb"),
     before => Service["druid-$component"],
+  }
+
+  # Link.
+  exec { "hdp-select set druid-historical ${hdp_version}":
+    cwd => "/",
+    path => "$path",
+    before => Service["druid-historical"],
   }
 
   # Startup.
@@ -35,25 +43,5 @@ class druid_historical {
   service { 'druid-historical':
     ensure => running,
     enable => true,
-  }
-
-  # Samples.
-  file { "/home/vagrant/sampleDruidQuery.sh":
-    ensure => file,
-    owner => vagrant,
-    group => vagrant,
-    source => "puppet:///modules/druid_historical/sampleDruidQuery.sh",
-  }
-  file { "/home/vagrant/TimeBoundaryQuery.json":
-    ensure => file,
-    owner => vagrant,
-    group => vagrant,
-    source => "puppet:///modules/druid_historical/TimeBoundaryQuery.json",
-  }
-  file { "/home/vagrant/TimeSeriesQuery.json":
-    ensure => file,
-    owner => vagrant,
-    group => vagrant,
-    source => "puppet:///modules/druid_historical/TimeSeriesQuery.json",
   }
 }

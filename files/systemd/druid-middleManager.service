@@ -3,12 +3,12 @@ Description=Druid MiddleManager
 After=syslog.target network.target remote-fs.target nss-lookup.target
 
 [Service]
-ExecStart=/usr/hdp/current/druid/bin/middleManager.sh start
+ExecStart=/usr/hdp/current/druid-middlemanager/bin/middleManager.sh start
 Group=druid
 Restart=always
 Type=forking
 User=druid
-WorkingDirectory=/usr/hdp/current/druid
+WorkingDirectory=/usr/hdp/current/druid-middlemanager
 
 [Install]
 WantedBy=multi-user.target

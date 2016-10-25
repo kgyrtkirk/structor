@@ -15,6 +15,7 @@
 
 class druid_overlord {
   require druid_base
+  $path="/bin:/sbin:/usr/bin:/usr/sbin"
 
   # Configuration files.
   $component="overlord"
@@ -22,6 +23,13 @@ class druid_overlord {
     ensure => file,
     content => template("druid_$component/jvm.config.erb"),
     before => Service["druid-$component"],
+  }
+
+  # Link.
+  exec { "hdp-select set druid-overlord ${hdp_version}":
+    cwd => "/",
+    path => "$path",
+    before => Service["druid-overlord"],
   }
 
   # Startup.
@@ -38,34 +46,88 @@ class druid_overlord {
   }
 
   # Samples.
-  file { "/home/vagrant/sampleDruidIndexWiki.sh":
+  file { "/home/vagrant/wikiticker-hdfs":
+    ensure => directory,
+    owner => vagrant,
+    group => vagrant,
+  } ->
+  file { "/home/vagrant/wikiticker-hdfs/wikitickerHdfsIndex.sh":
     ensure => file,
     owner => vagrant,
     group => vagrant,
-    content => template("druid_overlord/sampleDruidIndexWiki.sh.erb"),
-  }
-  file { "/home/vagrant/wikiticker-index-hdfs.json":
+    content => template("druid_overlord/wikitickerHdfsIndex.sh.erb"),
+  } ->
+  file { "/home/vagrant/wikiticker-hdfs/wikiticker-index-hdfs.json":
     ensure => file,
     owner => vagrant,
     group => vagrant,
     source => "puppet:///modules/druid_overlord/wikiticker-index-hdfs.json",
-  }
-  file { "/home/vagrant/sampleTpch.sh":
+  } ->
+  file { "/home/vagrant/wikiticker-hdfs/sampleDruidQuery.sh":
     ensure => file,
     owner => vagrant,
     group => vagrant,
-    content => template("druid_overlord/sampleTpch.sh.erb"),
+    source => "puppet:///modules/druid_overlord/sampleDruidQuery.sh",
+  } ->
+  file { "/home/vagrant/wikiticker-hdfs/TimeBoundaryQuery.json":
+    ensure => file,
+    owner => vagrant,
+    group => vagrant,
+    source => "puppet:///modules/druid_overlord/TimeBoundaryQuery.json",
+  } ->
+  file { "/home/vagrant/wikiticker-hdfs/TimeSeriesQuery.json":
+    ensure => file,
+    owner => vagrant,
+    group => vagrant,
+    source => "puppet:///modules/druid_overlord/TimeSeriesQuery.json",
   }
-  file { "/home/vagrant/tpch-index-hdfs.json":
+
+  file { "/home/vagrant/druid-tpch":
+    ensure => directory,
+    owner => vagrant,
+    group => vagrant,
+  } ->
+  file { "/home/vagrant/druid-tpch/indexTpch.sh":
+    ensure => file,
+    owner => vagrant,
+    group => vagrant,
+    content => template("druid_overlord/indexTpch.sh.erb"),
+  } ->
+  file { "/home/vagrant/druid-tpch/tpch-index-hdfs.json":
     ensure => file,
     owner => vagrant,
     group => vagrant,
     source => "puppet:///modules/druid_overlord/tpch-index-hdfs.json",
   }
+
   file { "/home/vagrant/sampleWeblog.sh":
     ensure => file,
     owner => vagrant,
     group => vagrant,
     content => template("druid_overlord/sampleWeblog.sh.erb"),
+  }
+
+  file { "/home/vagrant/wikiticker-kafka":
+    ensure => directory,
+    owner => vagrant,
+    group => vagrant,
+  } ->
+  file { "/home/vagrant/wikiticker-kafka/wikiticker-kafka-supervisor-spec.json":
+    ensure => file,
+    owner => vagrant,
+    group => vagrant,
+    content => template("druid_overlord/wikiticker-kafka-supervisor-spec.json.erb"),
+  } ->
+  file { "/home/vagrant/wikiticker-kafka/wikitickerKafkaSupervisor.sh":
+    ensure => file,
+    owner => vagrant,
+    group => vagrant,
+    content => template("druid_overlord/wikitickerKafkaSupervisor.sh.erb"),
+  } ->
+  file { "/home/vagrant/wikiticker-kafka/wikitickerKafkaDemo.sh":
+    ensure => file,
+    owner => vagrant,
+    group => vagrant,
+    content => template("druid_overlord/wikitickerKafkaDemo.sh.erb"),
   }
 }

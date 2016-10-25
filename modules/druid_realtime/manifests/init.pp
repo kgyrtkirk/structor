@@ -16,16 +16,50 @@
 class druid_realtime {
   require druid_base
 
+  # Configuration files.
+  $component="realtime"
+  file { "/etc/druid/conf/druid/$component":
+    ensure => directory,
+    owner => "root",
+    group => "root",
+  } ->
+  file { "/etc/druid/conf/druid/$component/jvm.config":
+    ensure => file,
+    content => template("druid_$component/jvm.config.erb"),
+  } ->
+  file { "/etc/druid/conf/druid/$component/realtime.spec":
+    ensure => file,
+    content => template("druid_$component/realtime.spec.erb"),
+  } ->
+  file { "/etc/druid/conf/druid/$component/runtime.properties":
+    ensure => file,
+    content => template("druid_$component/runtime.properties.erb"),
+  }
+
+  # Fixes / workarounds.
+  file { "/usr/hdp/current/druid-realtime":
+    ensure => link,
+    target => "/usr/hdp/${hdp_version}/druid",
+  } ->
+  file { "/usr/hdp/current/druid-realtime/bin/realtime.sh":
+    ensure => file,
+    mode => "755",
+    source => 'puppet:///modules/druid_realtime/realtime.sh',
+  }
+
+  # Samples / demos.
+  file { "/home/vagrant/sampleDruidRealtimeQuery.sh":
+    ensure => file,
+    owner => vagrant,
+    group => vagrant,
+    content => template("druid_realtime/sampleDruidRealtimeQuery.sh.erb"),
+  }
+
   # Startup.
   if ($operatingsystem == "centos" and $operatingsystemmajrelease == "7") {
     file { "/etc/systemd/system/druid-realtime.service":
       ensure => 'file',
       source => "/vagrant/files/systemd/druid-realtime.service",
-      before => Service["druid-realtime"],
     }
-  }
-  service { 'druid-realtime':
-    ensure => running,
-    enable => true,
   }
 }

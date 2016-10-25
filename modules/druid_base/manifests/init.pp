@@ -28,32 +28,30 @@ class druid_base {
   }
 
   # Install Druid.
-  exec { "rpm -ivh /vagrant/druid.rpm --nodeps":
-    cwd => "/",
-    path => "$path",
-    creates => "/etc/druid/conf",
+  package { "druid${package_version}":
+    ensure => installed,
   }
 
-  # Create a link in current and overwrite some files.
-  $version="2.6.0.0-65"
-  file { "/usr/hdp/current/druid":
-    ensure => "link",
-    target => "/usr/hdp/$version/druid",
-  } ->
-  file { "/usr/hdp/current/druid/bin/node.sh":
+  # Work around some bugs for now.
+  file { "/usr/hdp/${hdp_version}/druid/bin/node.sh":
     ensure => file,
     source => 'puppet:///modules/druid_base/node.sh',
   } ->
-  file { "/usr/hdp/current/druid/conf/druid/_common/common.runtime.properties":
+  file { "/usr/hdp/${hdp_version}/druid/conf/druid/_common/common.runtime.properties":
     ensure => file,
     content => template('druid_base/common.runtime.properties.erb'),
   } ->
-  file { "/usr/hdp/current/druid/var":
+  file { "/usr/hdp/${hdp_version}/druid/var":
     ensure => directory,
     owner => "druid",
     group => "druid",
   } ->
-  file { "/usr/hdp/current/druid/var/druid":
+  file { "/usr/hdp/${hdp_version}/druid/var/druid":
+    ensure => directory,
+    owner => "druid",
+    group => "druid",
+  } ->
+  file { "/usr/hdp/${hdp_version}/druid/var/tmp":
     ensure => directory,
     owner => "druid",
     group => "druid",
@@ -63,7 +61,7 @@ class druid_base {
     owner => "druid",
     group => "druid",
   } ->
-  file { "/usr/hdp/current/druid/extensions/druid-hdfs-storage/hadoop-lzo.jar":
+  file { "/usr/hdp/${hdp_version}/druid/extensions/druid-hdfs-storage/hadoop-lzo.jar":
     ensure => link,
     target => "/usr/hdp/${hdp_version}/hadoop/lib/hadoop-lzo-0.6.0.${hdp_version}.jar",
   }

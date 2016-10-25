@@ -15,6 +15,7 @@
 
 class druid_coordinator {
   require druid_base
+  $path="/bin:/sbin:/usr/bin:/usr/sbin"
 
   # Configuration files.
   $component="coordinator"
@@ -22,6 +23,13 @@ class druid_coordinator {
     ensure => file,
     content => template("druid_$component/jvm.config.erb"),
     before => Service["druid-$component"],
+  }
+
+  # Link.
+  exec { "hdp-select set druid-coordinator ${hdp_version}":
+    cwd => "/",
+    path => "$path",
+    before => Service["druid-coordinator"],
   }
 
   # Startup.

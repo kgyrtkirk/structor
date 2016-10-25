@@ -15,13 +15,21 @@
 
 class druid_broker {
   require druid_base
+  $path="/bin:/sbin:/usr/bin:/usr/sbin"
 
   # Configuration files.
   $component="broker"
-  file { "/etc/druid/conf/druid/$component/jvm.config":
+ file { "/etc/druid/conf/druid/$component/jvm.config":
     ensure => file,
     content => template("druid_$component/jvm.config.erb"),
     before => Service["druid-$component"],
+  }
+
+  # Link.
+  exec { "hdp-select set druid-broker ${hdp_version}":
+    cwd => "/",
+    path => "$path",
+    before => Service["druid-broker"],
   }
 
   # Startup.
