@@ -41,7 +41,11 @@ class hive2_llap {
   $slider_am_overhead = 512
   $extra_allowance = 512
   $gc_anti_slop = 512
-  $num_executors = $vm_cpus-2
+  if ($vm_cpus+0 == 8) {
+    $num_executors = $vm_cpus-3
+  } else {
+    $num_executors = $vm_cpus-2
+  }
   $total_am_overhead       = ($am_size * $max_queries) + $slider_am_overhead
   $full_executor_allotment = ($client_mem+0) * $num_executors
   $llap_yarn_size          = $yarn_total - $total_am_overhead
