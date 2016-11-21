@@ -1,0 +1,15 @@
+[Unit]
+Description=Apache HiveServer2
+After=syslog.target network.target remote-fs.target nss-lookup.target
+
+[Service]
+EnvironmentFile=/etc/systemd/system/hive2-server2.service.d/default.conf
+ExecStart=/home/vagrant/hivedist/hive/bin/hive --service hiveserver2
+Group=hadoop
+PIDFile=/var/run/hive/hive-server.pid
+Restart=always
+Type=simple
+User=hive
+
+[Install]
+WantedBy=multi-user.target
