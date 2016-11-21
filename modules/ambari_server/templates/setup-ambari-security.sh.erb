@@ -4,6 +4,6 @@ ambari-server start
 ambari-server setup-security <<EOF
 3
 ambari/<%= @hostname %>.<%= @domain %>@<%= @realm %>
-<%= scope.lookupvar('hdfs_client::keytab_dir') %>/ambari.keytab
+/etc/security/hadoop/ambari.keytab
 EOF
 ambari-server start

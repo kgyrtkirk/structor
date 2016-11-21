@@ -19,16 +19,23 @@ class ambari_server {
   $path="/bin:/usr/bin:/sbin:/usr/sbin"
 
   if $security == "true" {
-    require hdfs_client
-
-    file { "${hdfs_client::keytab_dir}/ambari.keytab":
+    # This is a hack to decouple Ambari from HDFS.
+    exec { "groupadd hadoop":
+      path => "$path",
+    } ->
+    file { "/etc/security/hadoop/":
+      ensure => directory,
+      owner => 'root',
+      group => 'hadoop',
+      mode => '750',
+    } ->
+    file { "/etc/security/hadoop/ambari.keytab":
       ensure => file,
       source => "/vagrant/generated/keytabs/${hostname}/ambari.keytab",
       owner => 'root',
       group => 'root',
       mode => '400',
-    }
-    ->
+    } ->
     Package["ambari-server"]
 
     file { "/tmp/setup-ambari-security.sh":
