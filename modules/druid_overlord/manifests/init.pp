@@ -129,5 +129,17 @@ class druid_overlord {
     owner => vagrant,
     group => vagrant,
     content => template("druid_overlord/wikitickerKafkaDemo.sh.erb"),
+  } ->
+  file { "/home/vagrant/wikiticker-kafka/hive_integration_setup.sh":
+    ensure => file,
+    owner => vagrant,
+    group => vagrant,
+    source => "puppet:///modules/druid_overlord/hive_integration_setup.sh",
+  } ->
+  file { "/home/vagrant/wikiticker-kafka/hive_integration_servers.sh":
+    ensure => file,
+    owner => vagrant,
+    group => vagrant,
+    source => "puppet:///modules/druid_overlord/hive_integration_servers.sh",
   }
 }
