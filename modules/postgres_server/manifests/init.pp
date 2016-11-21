@@ -53,10 +53,11 @@ class postgres_server {
   service { 'postgresql':
     ensure => running,
     enable => true,
-    before => Exec['createuser -sw vagrant'],
+    before => Exec['Create User'],
   }
 
-  exec { 'createuser -sw vagrant':
+  exec { 'Create User':
+    command => 'psql -c "CREATE USER vagrant WITH SUPERUSER PASSWORD \'vagrant\';"',
     cwd => "/",
     path => "${path}",
     user => "postgres",
