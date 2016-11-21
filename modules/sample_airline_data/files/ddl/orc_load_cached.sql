@@ -10,7 +10,7 @@ create table airports (
 	iata string,
 	airport string,
 	city string,
-	state double,
+	state string,
 	country string,
 	lat double,
 	lon double
