@@ -15,3 +15,5 @@ hive,interactive,simple_aggregation,,A simple aggregation query,true,false,1
 hive,interactive,having_1_greater_0,,Execute a query that includes HAVING(1 > 0),true,false,1
 hive,bi,tpcdsload,,BI Benchmark,true,false,1
 hive,bi,tbench1,,BI Benchmark,true,true,1
+hive,compatibility,tpcds,,TPC-DS Compatibility,true,false,1
+hive,compatibility,tpcds.trunk,,TPC-DS Compatibility,true,false,1
