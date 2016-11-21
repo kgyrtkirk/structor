@@ -139,6 +139,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
           "client_mem" => profile[:client_mem],
           "server_mem" => profile[:server_mem],
           "vm_mem" => profile[:vm_mem],
+          "extra_os_mem" => profile[:extra_os_mem],
           "vm_cpus" => profile[:vm_cpus],
 
           "domain" => profile[:domain],
