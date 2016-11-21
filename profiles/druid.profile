@@ -7,6 +7,7 @@
   "am_mem": 512,
   "server_mem": 768,
   "client_mem": 1024,
+  "extra_os_mem": 4096,
 
   "security": false,
   "domain": "example.com",
