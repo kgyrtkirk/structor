@@ -6,8 +6,8 @@ sudo chown hive:hadoop /var/log/hadoop/hive
 
 if [ ! -d /usr/local/share/maven ]; then
 	/vagrant/modules/maven/files/install_maven_manually.sh
-	export PATH=/usr/local/share/maven/bin:$PATH
 fi
+export PATH=/usr/local/share/maven/bin:$PATH
 
 sudo yum install -y git
 
@@ -28,7 +28,11 @@ ln -s apache-hive-*-bin hive
 cd hive
 cp bin/hive bin/hive.distro
 cp /usr/bin/hive2 bin/hive
-cp /etc/hive2/conf/hive-site.xml conf/
+if [ -f /etc/hive/hdp/hive-site.xml ] ; then
+	cp /etc/hive/hdp/hive-site.xml conf/
+else
+	cp /etc/hive2/conf/hive-site.xml conf/
+fi
 
 # Stop and disable Metastore and HS2
 sudo systemctl stop hive-metastore
