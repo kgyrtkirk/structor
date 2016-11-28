@@ -1,4 +1,4 @@
-create database if not exists accumulating_snapshot;
+drop database if exists accumulating_snapshot cascade;
 create database accumulating_snapshot;
 use accumulating_snapshot;
 
@@ -7,7 +7,7 @@ drop table if exists customer;
 drop table if exists product;
 
 -- Load the standard date dimension.
-source /OneDrive/Documents/SQLDemos/DateDimension/load_hive.sql;
+source /vagrant/modules/hdp26_demos/merge/AccumulatingSnapshot/load_hive.sql;
 
 create table order_fulfillment (
   order_date_sk integer,
