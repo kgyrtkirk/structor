@@ -1,6 +1,6 @@
 #!/bin/sh
 
-SCALE=2
+SCALE=${1:-2}
 
 /vagrant/modules/benchmetrics/files/cleanYarn.sh
 sudo service hive-server2 stop
