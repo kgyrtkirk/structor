@@ -42,6 +42,10 @@ if hasrole($roles, 'ambari-views') {
   include ambari_views
 }
 
+if hasrole($roles, 'atscale') {
+   include atscale
+}
+
 if hasrole($roles, 'cert') {
    include certification
 }
@@ -348,6 +352,11 @@ if hasrole($roles, 'slave') and hasrole($roles, 'hive-server2') {
 }
 if hasrole($roles, 'slave') and hasrole($roles, 'hive2-server2') {
   Class['hdfs_datanode'] -> Class['hive2_server2']
+}
+
+# Datanode before AtScale
+if hasrole($roles, 'slave') and hasrole($roles, 'atscale') {
+  Class['hdfs_datanode'] -> Class['atscale']
 }
 
 # Hack until LLAP stops reading from HDFS at build time.
