@@ -8,3 +8,11 @@ Driver=/usr/lib/hive/lib/native/Linux-amd64-64/libhortonworkshiveodbc64.so
 ## The option below is for using unixODBC when compiled with -DSQL_WCHART_CONVERT.
 ## Execute 'odbc_config --cflags' to determine if you need to uncomment it.
 # IconvEncoding=UCS-4LE
+
+[PostgreSQL ANSI]
+Description     = PostgreSQL ODBC driver (ANSI version)
+Driver          = psqlodbc.so
+Setup           = libodbcpsqlS.so
+Debug           = 0
+CommLog         = 1
+UsageCount      = 1

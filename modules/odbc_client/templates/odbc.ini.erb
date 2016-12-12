@@ -56,3 +56,18 @@ KrbHostFQDN=<%= @hsnode %>
 KrbServiceName=hive
 KrbRealm=<%= @realm %>
 <% end -%>
+
+[Postgres]
+Description         = PostgreSQL connection to 'vagrant' database
+Driver              = PostgreSQL ANSI
+Database            = vagrant
+Servername          = localhost
+UserName            = vagrant
+Password            = vagrant
+Port                = 5432
+Protocol            = 9.2
+ReadOnly            = No
+RowVersioning       = No
+ShowSystemTables    = No
+ShowOidColumn       = No
+FakeOidIndex        = No
