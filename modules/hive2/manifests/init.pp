@@ -36,6 +36,11 @@ class hive2 {
     content => template('hive2/hive-env.sh.erb'),
     require => Package["hive2${package_version}"],
   }
+  file { '/etc/hive2/conf/hive-log4j2.properties':
+    ensure => file,
+    source => "puppet:///modules/hive2/hive-log4j2.properties",
+    require => Package["hive2${package_version}"],
+  }
   file { '/etc/tez_hive2/conf/tez-site.xml':
     ensure => file,
     content => template('hive2/tez-site.xml.erb'),
