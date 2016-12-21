@@ -16,50 +16,21 @@
 class druid_base {
   require zookeeper_client
 
-  # Install Node.
-  exec { "curl --silent --location https://rpm.nodesource.com/setup_4.x | sudo bash -":
-    cwd => "/",
-    path => "$path",
-    creates => "/etc/yum.repos.d/nodesource-el.repo",
-  }
-  ->
-  package { "nodejs" :
-    ensure => installed,
-  }
-
   # Install Druid.
   package { "druid${package_version}":
     ensure => installed,
   }
 
-  # Work around some bugs for now.
-  file { "/usr/hdp/${hdp_version}/druid/bin/node.sh":
-    ensure => file,
-    source => 'puppet:///modules/druid_base/node.sh',
-  } ->
-  file { "/usr/hdp/${hdp_version}/druid/conf/druid/_common/common.runtime.properties":
-    ensure => file,
-    content => template('druid_base/common.runtime.properties.erb'),
-  } ->
-  file { "/usr/hdp/${hdp_version}/druid/var":
-    ensure => directory,
-    owner => "druid",
-    group => "druid",
-  } ->
-  file { "/usr/hdp/${hdp_version}/druid/var/druid":
-    ensure => directory,
-    owner => "druid",
-    group => "druid",
-  } ->
-  file { "/usr/hdp/${hdp_version}/druid/var/tmp":
-    ensure => directory,
-    owner => "druid",
-    group => "druid",
-  } ->
-  file { "/var/run/druid":
+  # Work around some permission issues.
+  file { "/var/lib/druid":
     ensure => "directory",
     owner => "druid",
     group => "druid",
+    mode => "770",
+  } ->
+  file { "/usr/hdp/${hdp_version}/druid/conf/_common/common.runtime.properties":
+    ensure => file,
+    content => template('druid_base/common.runtime.properties.erb'),
   } ->
   file { "/usr/hdp/${hdp_version}/druid/extensions/druid-hdfs-storage/hadoop-lzo.jar":
     ensure => link,
@@ -68,19 +39,19 @@ class druid_base {
 
   # Copy in the site XMLs.
   # Hope to get rid of this at some point.
-  file { "/etc/druid/conf/druid/_common/core-site.xml":
+  file { "/etc/druid/conf/_common/core-site.xml":
     ensure => file,
     source => '/etc/hadoop/conf/core-site.xml',
   } ->
-  file { "/etc/druid/conf/druid/_common/hdfs-site.xml":
+  file { "/etc/druid/conf/_common/hdfs-site.xml":
     ensure => file,
     source => '/etc/hadoop/conf/hdfs-site.xml',
   } ->
-  file { "/etc/druid/conf/druid/_common/mapred-site.xml":
+  file { "/etc/druid/conf/_common/mapred-site.xml":
     ensure => file,
     source => '/etc/hadoop/conf/mapred-site.xml',
   } ->
-  file { "/etc/druid/conf/druid/_common/yarn-site.xml":
+  file { "/etc/druid/conf/_common/yarn-site.xml":
     ensure => file,
     source => '/etc/hadoop/conf/yarn-site.xml',
   }

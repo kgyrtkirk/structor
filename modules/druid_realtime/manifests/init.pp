@@ -18,20 +18,20 @@ class druid_realtime {
 
   # Configuration files.
   $component="realtime"
-  file { "/etc/druid/conf/druid/$component":
+  file { "/etc/druid/conf/$component":
     ensure => directory,
     owner => "root",
     group => "root",
   } ->
-  file { "/etc/druid/conf/druid/$component/jvm.config":
+  file { "/etc/druid/conf/$component/jvm.config":
     ensure => file,
     content => template("druid_$component/jvm.config.erb"),
   } ->
-  file { "/etc/druid/conf/druid/$component/realtime.spec":
+  file { "/etc/druid/conf/$component/realtime.spec":
     ensure => file,
     content => template("druid_$component/realtime.spec.erb"),
   } ->
-  file { "/etc/druid/conf/druid/$component/runtime.properties":
+  file { "/etc/druid/conf/$component/runtime.properties":
     ensure => file,
     content => template("druid_$component/runtime.properties.erb"),
   }

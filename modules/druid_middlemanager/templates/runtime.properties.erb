@@ -1,6 +1,6 @@
 druid.indexer.runner.javaOpts=-server -Xmx2g -Duser.timezone=UTC -Dfile.encoding=UTF-8 -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager -Dhdp.version=<%= @hdp_version %> -Dhadoop.mapreduce.job.classloader=true
 druid.indexer.runner.startPort=8100
-druid.indexer.task.baseTaskDir=var/druid/task
+druid.indexer.task.baseTaskDir=/var/lib/druid
 druid.indexer.task.hadoopWorkingPath=/tmp/druid-indexing
 druid.port=8091
 druid.processing.buffer.sizeBytes=256000000

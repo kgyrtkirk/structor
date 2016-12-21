@@ -38,7 +38,7 @@ druid.discovery.curator.path=/druid/discovery
 
 # For Derby server on your Druid Coordinator (only viable in a cluster with a single Coordinator, no fail-over):
 druid.metadata.storage.type=derby
-druid.metadata.storage.connector.connectURI=jdbc:derby://<%= @druid_coordinator %>:1527/var/druid/metadata.db;create=true
+druid.metadata.storage.connector.connectURI=jdbc:derby://<%= @druid_coordinator %>:1527//var/lib/druid/metadata.db;create=true
 druid.metadata.storage.connector.host=<%= @druid_coordinator %>
 druid.metadata.storage.connector.port=1527
 

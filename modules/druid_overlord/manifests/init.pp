@@ -19,7 +19,7 @@ class druid_overlord {
 
   # Configuration files.
   $component="overlord"
-  file { "/etc/druid/conf/druid/$component/jvm.config":
+  file { "/etc/druid/conf/$component/jvm.config":
     ensure => file,
     content => template("druid_$component/jvm.config.erb"),
     before => Service["druid-$component"],

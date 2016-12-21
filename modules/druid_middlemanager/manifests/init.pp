@@ -20,12 +20,12 @@ class druid_middlemanager {
 
   # Configuration files.
   $component="middleManager"
-  file { "/etc/druid/conf/druid/$component/jvm.config":
+  file { "/etc/druid/conf/$component/jvm.config":
     ensure => file,
     content => template("druid_middlemanager/jvm.config.erb"),
     before => Service["druid-$component"],
   }
-  file { "/etc/druid/conf/druid/$component/runtime.properties":
+  file { "/etc/druid/conf/$component/runtime.properties":
     ensure => file,
     content => template("druid_middlemanager/runtime.properties.erb"),
     before => Service["druid-$component"],
