@@ -1,6 +1,6 @@
 #!/bin/sh
 
-SCALE=2
+SCALE=${1-2}
 
 # Don't do anything if the data is already loaded.
 psql -c 'select count(*) from reason'

@@ -6,7 +6,7 @@ function usage {
 }
 
 TARGET_DIR=target/v1.4.0/tools
-TARGET=$TARGET/dsdgen
+TARGET=$TARGET_DIR/dsdgen
 if [ ! -f $TARGET ]; then
 	echo "Please build the data generator with ./tpcds-build.sh first"
 	exit 1
@@ -19,7 +19,7 @@ fi
 
 # Get the parameters.
 SCALE=$1
-DIR=${2:/tmp/tpcds-generate}
+DIR=${2-/tmp/tpcds-generate}
 if [ "X$DEBUG_SCRIPT" != "X" ]; then
 	set -x
 fi
@@ -42,12 +42,12 @@ if [ $? -ne 0 ]; then
 	cp $TARGET_DIR/tpcds.idx $DIR
 	cp ddl/text/alltables.sql $DIR
 	cd $DIR
-	./dsdgen -sc $SCALE -rngseed 12345
+	./dsdgen -sc $SCALE -rngseed 12345 -force Y
 	for table in call_center catalog_page catalog_sales catalog_returns customer customer_address customer_demographics date_dim household_demographics income_band inventory item promotion reason ship_mode store store_sales store_returns time_dim warehouse web_page web_sales web_returns web_site; do
 		sed -i s'/.$//' $table.dat
 	done
 
-	echo "Loading text data to Postgres."
+	echo "Loading data to Postgres."
 	psql -f alltables.sql
 fi
-echo "TPC-DS text data generation complete."
+echo "TPC-DS data generation complete."
