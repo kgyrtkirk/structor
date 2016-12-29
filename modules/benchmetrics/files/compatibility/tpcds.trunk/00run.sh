@@ -2,6 +2,9 @@
 
 sleep 5
 
+# Load the data.
+/vagrant/modules/benchmetrics/files/tpc/tpcds.schemaonly/00prepare.sh
+
 rm -f tpcds.trunk.txt
 TOTAL=0
 SUCCESS=0
