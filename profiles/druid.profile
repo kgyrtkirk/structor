@@ -13,7 +13,7 @@
   "domain": "example.com",
   "realm": "EXAMPLE.COM",
 
-  "clients" : [ "hdfs", "hive", "hive2", "spark", "tez", "yarn", "zk" ],
+  "clients" : [ "druid", "hdfs", "hive", "hive2", "spark", "tez", "yarn", "zk" ],
   "nodes": [
     {"hostname": "druid", "ip": "192.168.59.31",
      "roles": ["client",
