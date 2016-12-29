@@ -1,6 +1,6 @@
 {
   "os": "centos7",
-  "hdp_short_version": "2.5.0",
+  "hdp_short_version": "2.5.3",
   "java_version": "java-1.8.0-openjdk",
   "vm_mem": 12288,
   "vm_cpus": 8,
