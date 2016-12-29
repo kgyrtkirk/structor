@@ -122,9 +122,6 @@ if hasrole($roles, 'druid-middlemanager') {
 if hasrole($roles, 'druid-overlord') {
   include druid_overlord
 }
-if hasrole($roles, 'druid-pivot') {
-  include druid_pivot
-}
 if hasrole($roles, 'druid-realtime') {
   include druid_realtime
 }
@@ -352,6 +349,11 @@ if hasrole($roles, 'slave') and hasrole($roles, 'hive-server2') {
 }
 if hasrole($roles, 'slave') and hasrole($roles, 'hive2-server2') {
   Class['hdfs_datanode'] -> Class['hive2_server2']
+}
+
+# Datanode before any Druid components.
+if hasrole($clients, 'druid') and hasrole($roles, 'druid-base') {
+  Class['hdfs_datanode'] -> Class['druid_base']
 }
 
 # Datanode before AtScale
