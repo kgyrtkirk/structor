@@ -25,3 +25,4 @@ order by avg_quarterly_sales,
 	 i_manufact_id
 limit 100;
 
+-- end query 1 in stream 0 using template query53.tpl

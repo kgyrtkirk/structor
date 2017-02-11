@@ -53,3 +53,4 @@ with my_customers as (
  order by segment, num_customers
  limit 100;
 
+-- end query 1 in stream 0 using template query54.tpl

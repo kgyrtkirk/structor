@@ -32,3 +32,4 @@ where asceding.rnk = descending.rnk
 order by asceding.rnk
 limit 100;
 
+-- end query 1 in stream 0 using template query44.tpl

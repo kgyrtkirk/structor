@@ -67,3 +67,4 @@ WITH all_sales AS (
  ORDER BY sales_cnt_diff
  limit 100;
 
+-- end query 1 in stream 0 using template query75.tpl

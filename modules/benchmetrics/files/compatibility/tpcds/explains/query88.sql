@@ -91,3 +91,4 @@ from
      and store.s_store_name = 'ese') s8
 ;
 
+-- end query 1 in stream 0 using template query88.tpl

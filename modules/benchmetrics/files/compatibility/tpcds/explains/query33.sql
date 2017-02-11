@@ -72,3 +72,4 @@ where i_category in ('Books'))
  order by total_sales
 limit 100;
 
+-- end query 1 in stream 0 using template query33.tpl

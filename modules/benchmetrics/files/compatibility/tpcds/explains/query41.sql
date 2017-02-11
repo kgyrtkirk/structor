@@ -49,3 +49,4 @@ select  distinct(i_product_name)
  order by i_product_name
  limit 100;
 
+-- end query 1 in stream 0 using template query41.tpl

@@ -49,3 +49,4 @@ select avg(ss_quantity)
      ))
 ;
 
+-- end query 1 in stream 0 using template query13.tpl

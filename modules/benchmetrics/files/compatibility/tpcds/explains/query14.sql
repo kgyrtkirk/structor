@@ -100,6 +100,8 @@ with  cross_items as
  group by rollup (channel, i_brand_id,i_class_id,i_category_id)
  order by channel,i_brand_id,i_class_id,i_category_id
  limit 100;
+
+explain
 with  cross_items as
  (select i_item_sk ss_item_sk
  from item,
@@ -195,3 +197,4 @@ with  cross_items as
  order by this_year.channel, this_year.i_brand_id, this_year.i_class_id, this_year.i_category_id
  limit 100;
 
+-- end query 1 in stream 0 using template query14.tpl

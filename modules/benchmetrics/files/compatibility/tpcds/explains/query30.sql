@@ -28,3 +28,4 @@ with customer_total_return as
                   ,c_last_review_date,ctr_total_return
 limit 100;
 
+-- end query 1 in stream 0 using template query30.tpl

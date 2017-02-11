@@ -2,7 +2,7 @@ explain
 select  dt.d_year
  	,item.i_category_id
  	,item.i_category
- 	,sum(ss_ext_sales_price)
+ 	,sum(ss_ext_sales_price) sp
  from 	date_dim dt
  	,store_sales
  	,item
@@ -14,8 +14,9 @@ select  dt.d_year
  group by 	dt.d_year
  		,item.i_category_id
  		,item.i_category
- order by       sum(ss_ext_sales_price) desc,dt.d_year
+ order by       sp desc,dt.d_year
  		,item.i_category_id
  		,item.i_category
 limit 100 ;
 
+-- end query 1 in stream 0 using template query42.tpl

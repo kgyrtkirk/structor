@@ -41,3 +41,4 @@ with wss as
  order by s_store_name1,s_store_id1,d_week_seq1
 limit 100;
 
+-- end query 1 in stream 0 using template query59.tpl

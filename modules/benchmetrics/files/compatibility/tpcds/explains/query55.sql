@@ -11,3 +11,4 @@ select  i_brand_id brand_id, i_brand brand,
  order by ext_price desc, i_brand_id
 limit 100 ;
 
+-- end query 1 in stream 0 using template query55.tpl

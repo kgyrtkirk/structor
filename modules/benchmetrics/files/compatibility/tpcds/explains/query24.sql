@@ -47,6 +47,8 @@ group by c_last_name
 having sum(netpaid) > (select 0.05*avg(netpaid)
                                  from ssales)
 ;
+
+explain
 with ssales as
 (select c_last_name
       ,c_first_name
@@ -96,3 +98,4 @@ having sum(netpaid) > (select 0.05*avg(netpaid)
                            from ssales)
 ;
 
+-- end query 1 in stream 0 using template query24.tpl

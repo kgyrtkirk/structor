@@ -17,3 +17,4 @@ select  ca_zip, ca_county, sum(ws_sales_price)
  order by ca_zip, ca_county
  limit 100;
 
+-- end query 1 in stream 0 using template query45.tpl

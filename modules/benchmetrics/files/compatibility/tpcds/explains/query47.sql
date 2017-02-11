@@ -48,3 +48,4 @@ with v1 as(
  order by sum_sales - avg_monthly_sales, 3
  limit 100;
 
+-- end query 1 in stream 0 using template query47.tpl

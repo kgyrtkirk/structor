@@ -65,3 +65,4 @@ where i_color in ('orchid','chiffon','lace'))
  order by total_sales
  limit 100;
 
+-- end query 1 in stream 0 using template query56.tpl

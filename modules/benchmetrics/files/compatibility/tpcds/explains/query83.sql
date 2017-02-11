@@ -64,3 +64,4 @@ with sr_items as
          ,sr_item_qty
  limit 100;
 
+-- end query 1 in stream 0 using template query83.tpl

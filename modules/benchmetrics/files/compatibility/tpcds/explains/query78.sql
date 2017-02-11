@@ -36,7 +36,7 @@ ss as
    group by d_year, ss_item_sk, ss_customer_sk
    )
  select 
-ss_sold_year, ss_item_sk, ss_customer_sk,
+ss_sold_year, ss_item_sk, ss_customer_sk, ss_qty, ss_wc, ss_sp, ws_qty, cs_qty,
 round(ss_qty/(coalesce(ws_qty+cs_qty,1)),2) ratio,
 ss_qty store_qty, ss_wc store_wholesale_cost, ss_sp store_sales_price,
 coalesce(ws_qty,0)+coalesce(cs_qty,0) other_chan_qty,
@@ -55,3 +55,4 @@ order by
   round(ss_qty/(coalesce(ws_qty+cs_qty,1)),2)
 limit 100;
 
+-- end query 1 in stream 0 using template query78.tpl

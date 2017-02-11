@@ -27,3 +27,4 @@ select
   ,rank_within_parent
   limit 100;
 
+-- end query 1 in stream 0 using template query36.tpl

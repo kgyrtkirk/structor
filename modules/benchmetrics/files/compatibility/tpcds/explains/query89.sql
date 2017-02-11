@@ -25,3 +25,4 @@ where case when (avg_monthly_sales <> 0) then (abs(sum_sales - avg_monthly_sales
 order by sum_sales - avg_monthly_sales, s_store_name
 limit 100;
 
+-- end query 1 in stream 0 using template query89.tpl

@@ -16,3 +16,4 @@ select  s_store_name, s_store_id,
  order by s_store_name, s_store_id,sun_sales,mon_sales,tue_sales,wed_sales,thu_sales,fri_sales,sat_sales
  limit 100;
 
+-- end query 1 in stream 0 using template query43.tpl

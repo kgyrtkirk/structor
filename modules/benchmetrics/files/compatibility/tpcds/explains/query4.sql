@@ -106,3 +106,4 @@ union all
  order by t_s_secyear.customer_preferred_cust_flag
 limit 100;
 
+-- end query 1 in stream 0 using template query4.tpl

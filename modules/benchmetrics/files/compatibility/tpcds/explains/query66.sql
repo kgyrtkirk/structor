@@ -219,3 +219,4 @@ select
  order by w_warehouse_name
  limit 100;
 
+-- end query 1 in stream 0 using template query66.tpl

@@ -1,5 +1,5 @@
 explain
-select  sum(cs_ext_discount_amt)  as "excess discount amount" 
+select  sum(cs_ext_discount_amt)  as `excess discount amount`
 from 
    catalog_sales 
    ,item 
@@ -8,7 +8,7 @@ where
 i_manufact_id = 269
 and i_item_sk = cs_item_sk 
 and d_date between '1998-03-18' and 
-        (cast('1998-03-18' as date) + 90 days)
+        (cast('1998-03-18' as date) + interval '90' days)
 and d_date_sk = cs_sold_date_sk 
 and cs_ext_discount_amt  
      > ( 
@@ -20,8 +20,9 @@ and cs_ext_discount_amt
          where 
               cs_item_sk = i_item_sk 
           and d_date between '1998-03-18' and
-                             (cast('1998-03-18' as date) + 90 days)
+                             (cast('1998-03-18' as date) + interval '90' days)
           and d_date_sk = cs_sold_date_sk 
       ) 
 limit 100;
 
+-- end query 1 in stream 0 using template query32.tpl

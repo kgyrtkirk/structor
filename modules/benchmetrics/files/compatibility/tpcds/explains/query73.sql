@@ -25,3 +25,4 @@ select c_last_name
       and cnt between 1 and 5
     order by cnt desc;
 
+-- end query 1 in stream 0 using template query73.tpl

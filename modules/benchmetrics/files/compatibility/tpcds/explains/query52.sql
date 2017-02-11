@@ -19,3 +19,4 @@ select  dt.d_year
  	,brand_id
 limit 100 ;
 
+-- end query 1 in stream 0 using template query52.tpl

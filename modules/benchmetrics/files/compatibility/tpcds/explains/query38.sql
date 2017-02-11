@@ -20,3 +20,4 @@ select  count(*) from (
 ) hot_cust
 limit 100;
 
+-- end query 1 in stream 0 using template query38.tpl

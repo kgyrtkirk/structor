@@ -28,3 +28,4 @@ with customer_total_return as
                   ,ca_location_type,ctr_total_return
  limit 100;
 
+-- end query 1 in stream 0 using template query81.tpl

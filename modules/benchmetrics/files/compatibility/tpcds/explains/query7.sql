@@ -18,3 +18,4 @@ select  i_item_id,
  order by i_item_id
  limit 100;
 
+-- end query 1 in stream 0 using template query7.tpl

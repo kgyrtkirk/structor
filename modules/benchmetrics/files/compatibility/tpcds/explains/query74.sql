@@ -58,3 +58,4 @@ with year_total as (
  order by 2,1,3
 limit 100;
 
+-- end query 1 in stream 0 using template query74.tpl

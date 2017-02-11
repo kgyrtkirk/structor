@@ -42,3 +42,4 @@ select  i_item_id
          ,s_state
 limit 100;
 
+-- end query 1 in stream 0 using template query17.tpl

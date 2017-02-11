@@ -15,3 +15,4 @@ select  ss_customer_sk
       order by sumsales, ss_customer_sk
 limit 100;
 
+-- end query 1 in stream 0 using template query93.tpl

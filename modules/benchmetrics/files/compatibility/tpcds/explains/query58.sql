@@ -62,3 +62,4 @@ with ss_items as
          ,ss_item_rev
  limit 100;
 
+-- end query 1 in stream 0 using template query58.tpl

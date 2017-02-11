@@ -1,5 +1,4 @@
-explain
-select  
+explain select  
    w_state
   ,i_item_id
   ,sum(case when (cast(d_date as date) < cast ('1998-04-08' as date)) 
@@ -18,10 +17,11 @@ select
  and i_item_sk          = cs_item_sk
  and cs_warehouse_sk    = w_warehouse_sk 
  and cs_sold_date_sk    = d_date_sk
- and d_date between (cast ('1998-04-08' as date) - 30 days)
-                and (cast ('1998-04-08' as date) + 30 days) 
+ and d_date between (cast ('1998-04-08' as date) - interval '30' days)
+                and (cast ('1998-04-08' as date) + interval '30' days) 
  group by
     w_state,i_item_id
  order by w_state,i_item_id
 limit 100;
 
+-- end query 1 in stream 0 using template query40.tpl
