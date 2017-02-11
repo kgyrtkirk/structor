@@ -1,6 +1,7 @@
 [Unit]
 Description=Druid Overlord
 After=syslog.target network.target remote-fs.target nss-lookup.target
+Requires=druid-coordinator.service
 
 [Service]
 ExecStart=/usr/hdp/current/druid-overlord/bin/overlord.sh start

@@ -18,7 +18,7 @@
     {"hostname": "druid", "ip": "192.168.59.31",
      "roles": ["client",
                "druid-broker", "druid-coordinator", "druid-historical",
-               "druid-middlemanager", "druid-overlord",
+               "druid-middlemanager", "druid-overlord", "druid-flighttracker",
                "hive2", "hive2-server2", "hive-db", "hive-meta",
                "httpd", "kafka", "nn", "slave",
                "yarn", "yarn-timelineserver", "zk"]}
