@@ -65,13 +65,18 @@ def prepareEnvironment(options):
 		print "Preparing environment", environment
 		os.unlink("current.profile")
 		os.symlink(environmentFile, "current.profile")
+		command = "vagrant halt"
+		(text, ret) = runCommand(command, True)
+		if ret != 0:
+			assert False, "Prepare environment failed, exiting"
 		command = "vagrant up"
 		(text, ret) = runCommand(command, True)
 		if ret != 0:
 			assert False, "Prepare environment failed, exiting"
-		if text.find("Machine already provisioned") > -1:
-			print "Machine already provisioned, waiting 90 seconds for machine to settle."
-			time.sleep(90)
+
+		# Being ultra conservative here to prevent failures.
+		print "Machine provisioned, waiting 180 seconds for machine to settle."
+		time.sleep(180)
 
 def getHostname():
 	with open("current.profile") as fd:
