@@ -55,4 +55,12 @@ class druid_base {
     ensure => file,
     source => '/etc/hadoop/conf/yarn-site.xml',
   }
+
+  # Logging configuration.
+  file { "/etc/druid/conf/_common/log4j2.xml":
+    ensure => file,
+    owner => vagrant,
+    group => vagrant,
+    source => "puppet:///modules/druid_base/log4j2.xml",
+  }
 }

@@ -24,6 +24,12 @@ class druid_historical {
     content => template("druid_$component/jvm.config.erb"),
     before => Service["druid-$component"],
   }
+  file { "/etc/druid/conf/$component/runtime.properties":
+    ensure => file,
+    owner => druid,
+    group => druid,
+    source => "puppet:///modules/druid_historical/runtime.properties",
+  }
 
   # Link.
   exec { "hdp-select set druid-historical ${hdp_version}":

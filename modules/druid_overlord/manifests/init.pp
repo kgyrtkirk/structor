@@ -118,12 +118,6 @@ class druid_overlord {
     group => vagrant,
     content => template("druid_overlord/wikiticker-kafka-supervisor-spec.json.erb"),
   } ->
-  file { "/home/vagrant/wikiticker-kafka/wikitickerKafkaSupervisor.sh":
-    ensure => file,
-    owner => vagrant,
-    group => vagrant,
-    content => template("druid_overlord/wikitickerKafkaSupervisor.sh.erb"),
-  } ->
   file { "/home/vagrant/wikiticker-kafka/wikitickerKafkaDemo.sh":
     ensure => file,
     owner => vagrant,
@@ -135,11 +129,5 @@ class druid_overlord {
     owner => vagrant,
     group => vagrant,
     source => "puppet:///modules/druid_overlord/hive_integration_setup.sh",
-  } ->
-  file { "/home/vagrant/wikiticker-kafka/hive_integration_servers.sh":
-    ensure => file,
-    owner => vagrant,
-    group => vagrant,
-    source => "puppet:///modules/druid_overlord/hive_integration_servers.sh",
   }
 }
