@@ -16,10 +16,14 @@
 class hive_client {
   require yarn_client
 
-  $path="/bin:/usr/bin"
+  $path="/sbin:/bin:/usr/bin"
 
   package { "hive${package_version}":
     ensure => installed,
+  } ->
+  exec { "Add hive to hive":
+    command => "usermod -G hive hive",
+    path => "$path",
   }
 
   package { "hive${package_version}-hcatalog":

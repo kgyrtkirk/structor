@@ -23,6 +23,14 @@ class hive2_llap {
     require load_hive_keytab
   }
 
+  file { "/home/vagrant/start_llap.sh":
+    ensure => "file",
+    source => 'puppet:///modules/hive2_llap/start_llap.sh',
+    owner => vagrant,
+    group => vagrant,
+    mode => '755',
+  }
+
   # LLAP Sizing:
   # LLAP will take up all YARN memory minus 1 GB (including Slider AM overhead of 0.5 GB)
   #   First: Try to set number of executors = number of CPUs - 2.
