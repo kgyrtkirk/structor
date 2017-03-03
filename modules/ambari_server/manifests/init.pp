@@ -61,6 +61,10 @@ class ambari_server {
     groups => "users",
   }
 
+  exec { "Set up SSH":
+    command => "/vagrant/modules/ambari_server/files/setup_ssh.sh"
+  }
+
   package { "ambari-server":
     ensure => installed
   }
