@@ -44,25 +44,4 @@ STORED AS ORC
 location '/apps/hive/warehouse/airline_ontime.db/flights'
 TBLPROPERTIES("orc.bloom.filter.columns"="*");
 
-alter table flights add partition (year=1987);
-alter table flights add partition (year=1988);
-alter table flights add partition (year=1989);
-alter table flights add partition (year=1990);
-alter table flights add partition (year=1991);
-alter table flights add partition (year=1992);
-alter table flights add partition (year=1993);
-alter table flights add partition (year=1994);
-alter table flights add partition (year=1995);
-alter table flights add partition (year=1996);
-alter table flights add partition (year=1997);
-alter table flights add partition (year=1998);
-alter table flights add partition (year=1999);
-alter table flights add partition (year=2000);
-alter table flights add partition (year=2001);
-alter table flights add partition (year=2002);
-alter table flights add partition (year=2003);
-alter table flights add partition (year=2004);
-alter table flights add partition (year=2005);
-alter table flights add partition (year=2006);
-alter table flights add partition (year=2007);
-alter table flights add partition (year=2008);
+MSCK REPAIR TABLE flights;
