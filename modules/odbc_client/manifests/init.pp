@@ -27,13 +27,13 @@ class odbc_client {
       before => Exec["Download ODBC"],
     }
     if ($operatingsystemmajrelease == "6") {
-      $version="2.1.5.1006"
+      $version="2.1.7.1010"
       $build="hive-odbc-native-$version"
       $rpmbase="$build-1.el6.x86_64"
       $rpm="$rpmbase.rpm"
       $driver_url="http://public-repo-1.hortonworks.com/HDP/hive-odbc/$version/centos6/$rpm"
     } else {
-      $version="2.1.5.1006"
+      $version="2.1.7.1010"
       $build="hive-odbc-native-$version"
       $rpmbase="$build-1.el7.x86_64"
       $rpm="$rpmbase.rpm"
