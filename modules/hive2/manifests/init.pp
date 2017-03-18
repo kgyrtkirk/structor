@@ -14,13 +14,12 @@
 #   limitations under the License.
 
 class hive2 {
-  require hive_client
-
   $path="/bin:/usr/bin"
 
   package { "hive2${package_version}":
     ensure => installed,
   }
+
   package { "tez_hive2${package_version}":
     ensure => installed,
   }
@@ -47,9 +46,21 @@ class hive2 {
     require => Package["tez_hive2${package_version}"],
   }
 
+  # Tweaked CLI script
+  file { '/usr/hdp/current/hive-server2-hive2/bin/hive.distro':
+    ensure => file,
+    source => "puppet:///modules/hive2/hive.distro",
+    require => Package["hive2${package_version}"],
+  }
+
   # Convenience links.
   file {"/usr/bin/hive2":
     ensure => link,
+    target => "/usr/hdp/${hdp_version}/hive2/bin/hive",
+  }
+  file {"/usr/bin/hive":
+    ensure => link,
+    force => true,
     target => "/usr/hdp/${hdp_version}/hive2/bin/hive",
   }
   file {"/usr/bin/hplsql":
