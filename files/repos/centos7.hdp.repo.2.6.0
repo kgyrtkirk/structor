@@ -1,17 +1,17 @@
-#VERSION_NUMBER=2.6.0.0-190
-[HDP-2.6.0.0-190]
-name=HDP Version - HDP-2.6.0.0-190
-baseurl=http://s3.amazonaws.com/dev.hortonworks.com/HDP/centos6/2.x/BUILDS/2.6.0.0-190
+#VERSION_NUMBER=2.6.0.2-41
+[HDP-2.6.0.2-41]
+name=HDP Version - HDP-2.6.0.2-41
+baseurl=http://s3.amazonaws.com/dev.hortonworks.com/HDP/centos7/2.x/BUILDS/2.6.0.2-41
 gpgcheck=1
-gpgkey=http://s3.amazonaws.com/dev.hortonworks.com/HDP/centos6/2.x/BUILDS/2.6.0.0-190/RPM-GPG-KEY/RPM-GPG-KEY-Jenkins
+gpgkey=http://s3.amazonaws.com/dev.hortonworks.com/HDP/centos7/2.x/BUILDS/2.6.0.2-41/RPM-GPG-KEY/RPM-GPG-KEY-Jenkins
 enabled=1
 priority=1
 
 
 [HDP-UTILS-1.1.0.21]
 name=HDP-UTILS Version - HDP-UTILS-1.1.0.21
-baseurl=http://s3.amazonaws.com/dev.hortonworks.com/HDP-UTILS-1.1.0.21/repos/centos6
+baseurl=http://s3.amazonaws.com/dev.hortonworks.com/HDP-UTILS-1.1.0.21/repos/centos7
 gpgcheck=1
-gpgkey=http://s3.amazonaws.com/dev.hortonworks.com/HDP/centos6/2.x/updates/2.6.0.0/RPM-GPG-KEY/RPM-GPG-KEY-Jenkins
+gpgkey=http://s3.amazonaws.com/dev.hortonworks.com/HDP/centos7/2.x/updates/2.6.0.2/RPM-GPG-KEY/RPM-GPG-KEY-Jenkins
 enabled=1
 priority=1
