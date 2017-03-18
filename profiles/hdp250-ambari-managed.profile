@@ -1,7 +1,7 @@
 {
-  "os": "centos7",
+  "os" : "centos7",
   "hdp_short_version": "2.5.0",
-  "ambari_version": "2.4.0.0",
+  "ambari_version": "2.5.0.0",
   "wtf": "YFW Ambari never bothered to fix compatibility with OpenJDK 7",
   "java_version": "java-1.8.0-openjdk",
   "vm_mem": 12288,
