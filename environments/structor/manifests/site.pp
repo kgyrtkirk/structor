@@ -113,6 +113,9 @@ if hasrole($roles, 'druid-broker') {
 if hasrole($roles, 'druid-coordinator') {
   include druid_coordinator
 }
+if hasrole($roles, 'druid-flighttracker') {
+  include druid_flighttracker
+}
 if hasrole($roles, 'druid-historical') {
   include druid_historical
 }
@@ -121,12 +124,6 @@ if hasrole($roles, 'druid-middlemanager') {
 }
 if hasrole($roles, 'druid-overlord') {
   include druid_overlord
-}
-if hasrole($roles, 'druid-realtime') {
-  include druid_realtime
-}
-if hasrole($roles, 'druid-tranquility') {
-  include druid_tranquility
 }
 
 if hasrole($roles, 'flume-server') {
@@ -159,6 +156,10 @@ if hasrole($roles, 'hive2') {
 
 if hasrole($roles, 'hive2-llap') {
   include hive2_llap
+}
+
+if hasrole($roles, 'hive2-meta') {
+  include hive2_meta
 }
 
 if hasrole($roles, 'hive2-server2') {
