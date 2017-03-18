@@ -1,0 +1,6 @@
+<configuration>
+    <property>
+      <name>hive.aux.jars.path</name>
+      <value>/usr/hdp/current/hive-server2-hive2/lib/hive-druid-handler.jar,/usr/hdp/current/hive-server2-hive2/lib/calcite-druid-*.jar,/usr/hdp/current/hive-server2-hive2/lib/calcite-core-*.jar,/usr/hdp/current/hive-server2-hive2/lib/calcite-linq4j-*.jar</value>
+    </property>
+</configuration>
