@@ -1,0 +1,14 @@
+[Unit]
+Description=Superset
+After=syslog.target network.target remote-fs.target nss-lookup.target
+
+[Service]
+ExecStart=/usr/hdp/current/superset/bin/runserver -p 9999
+Group=druid
+Restart=always
+Type=simple
+User=druid
+WorkingDirectory=/usr/hdp/current/druid-overlord
+
+[Install]
+WantedBy=multi-user.target
