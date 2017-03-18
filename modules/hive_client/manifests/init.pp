@@ -15,6 +15,7 @@
 
 class hive_client {
   require yarn_client
+  require mysql_connector
 
   $path="/sbin:/bin:/usr/bin"
 
@@ -66,10 +67,6 @@ class hive_client {
   file { '/etc/hive/hdp/hive-log4j.properties':
     ensure => file,
     content => template('hive_client/hive-log4j.erb'),
-  }
-
-  package { 'mysql-connector-java':
-    ensure => installed,
   }
 
   file { "/usr/hdp/${hdp_version}/hive/lib/mysql-connector-java.jar":
