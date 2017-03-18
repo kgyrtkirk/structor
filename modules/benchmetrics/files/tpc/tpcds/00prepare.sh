@@ -1,9 +1,10 @@
 #!/bin/sh
 
-SCALE=2
+SCALE=${1:-2}
 
 /vagrant/modules/benchmetrics/files/cleanYarn.sh
 sudo service hive-server2 stop
+sudo service hive2-server2 stop
 sudo usermod -a -G hadoop vagrant
 
 # Don't do anything if the data is already loaded.
