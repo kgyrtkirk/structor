@@ -15,6 +15,7 @@
 
 class druid_base {
   require zookeeper_client
+  require mysql_connector
 
   # Install Druid.
   package { "druid${package_version}":
@@ -35,6 +36,12 @@ class druid_base {
   file { "/usr/hdp/${hdp_version}/druid/extensions/druid-hdfs-storage/hadoop-lzo.jar":
     ensure => link,
     target => "/usr/hdp/${hdp_version}/hadoop/lib/hadoop-lzo-0.6.0.${hdp_version}.jar",
+  }
+
+  # Connector JAR
+  file { "/usr/hdp/${hdp_version}/druid/extensions/mysql-metadata-storage/mysql-connector-java.jar":
+    ensure => 'link',
+    target => "/usr/share/java/mysql-connector-java.jar",
   }
 
   # Copy in the site XMLs.
