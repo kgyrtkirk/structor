@@ -25,7 +25,7 @@ and exists (select *
 and not exists(select *
                from catalog_returns cr1
                where cs1.cs_order_number = cr1.cr_order_number)
-order by count(distinct cs_order_number)
+order by `order count`
 limit 100;
 
 -- end query 1 in stream 0 using template query16.tpl
