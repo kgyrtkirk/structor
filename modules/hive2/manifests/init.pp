@@ -46,6 +46,14 @@ class hive2 {
     require => Package["tez_hive2${package_version}"],
   }
 
+  if $hive_options {
+    exec {"python /vagrant/files/xmlcombine.py /etc/hive2/conf/hive-site.xml hive_client $hive_options":
+        cwd => "/",
+        path => $path,
+        require => File["/etc/hive2/conf/hive-site.xml"]
+    }
+  }
+
   # Tweaked CLI script
   file { '/usr/hdp/current/hive-server2-hive2/bin/hive.distro':
     ensure => file,
@@ -62,6 +70,11 @@ class hive2 {
     ensure => link,
     force => true,
     target => "/usr/hdp/${hdp_version}/hive2/bin/hive",
+  }
+  file {"/usr/bin/beeline":
+    ensure => link,
+    force => true,
+    target => "/usr/hdp/${hdp_version}/hive2/bin/beeline",
   }
   file {"/usr/bin/hplsql":
     ensure => link,
