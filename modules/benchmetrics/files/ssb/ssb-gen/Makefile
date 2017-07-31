@@ -1,4 +1,3 @@
-
 all: target/lib/dbgen.jar target/ssb-gen-1.0-SNAPSHOT.jar
 
 target/ssb-gen-1.0-SNAPSHOT.jar: $(shell find . -name *.java) 
@@ -15,4 +14,5 @@ target/lib/dbgen.jar: target/tools/dbgen
 	cd target/; mkdir -p lib/; ( jar cvf lib/dbgen.jar tools/ || gjar cvf lib/dbgen.jar tools/ )
 
 clean:
+	rm -rf target
 	mvn clean

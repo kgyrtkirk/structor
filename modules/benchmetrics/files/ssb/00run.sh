@@ -1,11 +1,6 @@
 #!/bin/sh
 
-cd /vagrant/modules/benchmetrics/files/tpc/tpch/queries
-DATABASE=tpch_bin_flat_orc_2
+TARGET=${1:-localhost:10000}
+BEELINE="beeline -u jdbc:hive2://$TARGET/default"
 
-hive --version | grep '^Hive 2'
-if [ $? -eq 0 ]; then
-	hive -d DB=${DATABASE} -f /vagrant/modules/benchmetrics/files/tpc/tpch/queries/skip-q11-serial.sql
-else
-	hive -d DB=${DATABASE} -f /vagrant/modules/benchmetrics/files/tpc/tpch/queries/skip-q19-serial.sql
-fi
+$BEELINE -f /vagrant/modules/benchmetrics/files/ssb/queries.druid/allqueries.sql
