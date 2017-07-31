@@ -21,53 +21,53 @@ class spark_thriftserver {
   }
 
   # Config files.
-  file { '/usr/hdp/current/spark-thriftserver/conf/hive-site.xml':
+  file { '/usr/hdp/current/spark2-thriftserver/conf/hive-site.xml':
     ensure => file,
     content => template('spark_thriftserver/hive-site.xml.erb'),
   } ->
-  file { '/usr/hdp/current/spark-thriftserver/conf/spark-defaults.conf':
+  file { '/usr/hdp/current/spark2-thriftserver/conf/spark2-defaults.conf':
     ensure => file,
-    content => template('spark_thriftserver/spark-defaults.conf.erb'),
+    content => template('spark_thriftserver/spark2-defaults.conf.erb'),
   } ->
-  file { '/usr/hdp/current/spark-thriftserver/conf/java-opts':
+  file { '/usr/hdp/current/spark2-thriftserver/conf/java-opts':
     ensure => "file",
     mode => '0644',
     source => 'puppet:///modules/spark_thriftserver/java-opts',
   } ->
-  file { '/usr/hdp/current/spark-thriftserver/conf/log4j.properties':
+  file { '/usr/hdp/current/spark2-thriftserver/conf/log4j.properties':
     ensure => "file",
     mode => '0644',
     source => 'puppet:///modules/spark_thriftserver/log4j.properties',
   } ->
-  file { '/usr/hdp/current/spark-thriftserver/conf/metrics.properties':
+  file { '/usr/hdp/current/spark2-thriftserver/conf/metrics.properties':
     ensure => "file",
     mode => '0644',
     source => 'puppet:///modules/spark_thriftserver/metrics.properties',
   } ->
-  file { '/usr/hdp/current/spark-thriftserver/conf/spark-env.sh':
+  file { '/usr/hdp/current/spark2-thriftserver/conf/spark2-env.sh':
     ensure => "file",
     mode => '0644',
-    source => 'puppet:///modules/spark_thriftserver/spark-env.sh',
+    source => 'puppet:///modules/spark_thriftserver/spark2-env.sh',
   } ->
-  file { '/usr/hdp/current/spark-thriftserver/conf/spark-thrift-fairscheduler.xml':
+  file { '/usr/hdp/current/spark2-thriftserver/conf/spark2-thrift-fairscheduler.xml':
     ensure => "file",
     mode => '0644',
-    source => 'puppet:///modules/spark_thriftserver/spark-thrift-fairscheduler.xml',
+    source => 'puppet:///modules/spark_thriftserver/spark2-thrift-fairscheduler.xml',
   } ->
-  file { '/usr/hdp/current/spark-thriftserver/conf/spark-thrift-sparkconf.conf':
+  file { '/usr/hdp/current/spark2-thriftserver/conf/spark2-thrift-sparkconf.conf':
     ensure => "file",
     mode => '0644',
-    source => 'puppet:///modules/spark_thriftserver/spark-thrift-sparkconf.conf',
+    source => 'puppet:///modules/spark_thriftserver/spark2-thrift-sparkconf.conf',
   } ->
-  file { '/usr/hdp/current/spark-thriftserver/conf/spark-thriftserver':
+  file { '/usr/hdp/current/spark2-thriftserver/conf/spark2-thriftserver':
     ensure => "file",
     mode => '0644',
-    source => 'puppet:///modules/spark_thriftserver/spark-thriftserver',
+    source => 'puppet:///modules/spark_thriftserver/spark2-thriftserver',
   } ->
   file { '/var/log/spark':
     ensure => "directory",
-    owner => hive,
-    group => hive,
+    owner => spark,
+    group => spark,
   } ->
   service { 'spark-thriftserver':
     ensure => running,
@@ -82,7 +82,7 @@ class spark_thriftserver {
       before => Service["spark-thriftserver"],
     }
   } else {
-    file { "/etc/init.d/spark-thriftserver":
+    file { "/etc/init.d/spark2-thriftserver":
       ensure => file,
       source => "puppet:///modules/spark_thriftserver/spark-thriftserver",
       mode => '755',
