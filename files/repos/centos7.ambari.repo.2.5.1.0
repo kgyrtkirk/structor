@@ -1,0 +1,9 @@
+#VERSION_NUMBER=2.5.1.0-159
+[ambari-2.5.1.0-159]
+name=ambari Version - ambari-2.5.1.0-159
+baseurl=http://s3.amazonaws.com/dev.hortonworks.com/ambari/centos7/2.x/BUILDS/2.5.1.0-159
+gpgcheck=1
+gpgkey=http://s3.amazonaws.com/dev.hortonworks.com/ambari/centos7/2.x/BUILDS/2.5.1.0-159/RPM-GPG-KEY/RPM-GPG-KEY-Jenkins
+enabled=1
+priority=1
+
