@@ -14,6 +14,7 @@
 #   limitations under the License.
 
 class hive_db {
+  require mysql_connector
   $path = "/bin:/usr/bin"
 
   if ($operatingsystem == "centos" and $operatingsystemmajrelease == "7") {
