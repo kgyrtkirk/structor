@@ -1,0 +1,14 @@
+<configuration>
+  <property>
+    <name>hive.server2.use.SSL</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>hive.server2.keystore.path</name>
+    <value>/etc/keystore.jks</value>
+  </property>
+  <property>
+    <name>hive.server2.keystore.password</name>
+    <value>abcdef</value>
+  </property>
+</configuration>
