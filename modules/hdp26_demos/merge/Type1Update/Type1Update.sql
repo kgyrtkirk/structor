@@ -11,7 +11,7 @@ CLUSTERED BY (id) INTO 2 BUCKETS STORED AS ORC TBLPROPERTIES ("transactional"="t
 insert into customer values ( 1, "Abc Co.", "OH" ), ( 2, "Xyz Co.", "CA" );
 
 create table new_customer_stage ( id int, name string, state string);
-insert into customer_updates values ( 1, "Abc Co.", "OH" ), ( 2, "Xyz Co.", "TX" ), ( 3, "Ghi Co.", "GA" )
+insert into new_customer_stage values ( 1, "Abc Co.", "OH" ), ( 2, "Xyz Co.", "TX" ), ( 3, "Ghi Co.", "GA" );
 
 merge into customer
 using ( select * from new_customer_stage) sub
