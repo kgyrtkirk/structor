@@ -150,6 +150,10 @@ if hasrole($roles, 'hive-server2') {
   include hive_server2
 }
 
+if hasrole($roles, 'hive-ssl') {
+  include hive_ssl
+}
+
 if hasrole($roles, 'hive2') {
   include hive2
 }
@@ -213,6 +217,10 @@ if hasrole($roles, 'spark-thriftserver') {
 if hasrole($roles, 'slave') {
   include hdfs_datanode
   include yarn_node_manager
+}
+
+if hasrole($roles, 'superset') {
+  include superset
 }
 
 if hasrole($roles, 'tez-ui') {
