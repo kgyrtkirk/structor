@@ -13,7 +13,7 @@
   "domain": "example.com",
   "realm": "EXAMPLE.COM",
 
-  "clients" : [ ],
+  "clients" : [ "odbc" ],
   "nodes": [
     {"hostname": "postgres", "ip": "192.168.59.100",
      "roles": ["client", "nn", "postgres", "slave"]}
