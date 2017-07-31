@@ -17,7 +17,7 @@
   "nodes": [
     {"hostname": "hdp253", "ip": "192.168.59.11",
      "roles": ["client", "hive-db", "hive-meta",
-               "hive2", "hive2-server2",
+               "hive", "hive2", "hive2-server2",
                "httpd", "nn", "postgres", "slave", "tez-ui",
                "yarn", "yarn-timelineserver", "zk"]}
   ],
