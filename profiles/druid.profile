@@ -1,6 +1,6 @@
 {
   "os": "centos7",
-  "hdp_short_version": "2.6.0",
+  "hdp_short_version": "2.6.1",
   "java_version": "java-1.8.0-openjdk",
   "vm_mem": 12288,
   "vm_cpus": 4,
@@ -21,11 +21,11 @@
                "druid-broker", "druid-coordinator", "druid-historical",
                "druid-middlemanager", "druid-overlord", "druid-flighttracker",
                "hive2", "hive2-server2", "hive-db", "hive2-meta",
-               "httpd", "kafka", "nn", "slave",
+               "httpd", "kafka", "nn", "slave", "superset", "tez-ui",
                "yarn", "yarn-timelineserver", "zk"]}
   ],
 
-  "hive_options" : "interactive",
+  "hive_options" : "acid,interactive",
 
   "extras": [ "sample-hive-data" ]
 }
