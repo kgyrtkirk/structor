@@ -7,8 +7,6 @@
        }.map{|node| node[:hostname] + "." + @domain};
    @druid_overlord = eval(@nodes).select {|node| node[:roles].include? 'druid-overlord'
        }.map{|node| node[:hostname] + "." + @domain};
-   @druid_pivot = eval(@nodes).select {|node| node[:roles].include? 'druid-pivot'
-       }.map{|node| node[:hostname] + "." + @domain};
    @hbase = eval(@nodes).select {|node| node[:roles].include? 'hbase-master'
        }.map{|node| node[:hostname] + "." + @domain};
    @hive_server2 = eval(@nodes).select {|node| node[:roles].include? 'hive-server2'
@@ -23,9 +21,9 @@
        }.map{|node| node[:hostname] + "." + @domain};
    @oozie = eval(@nodes).select {|node| node[:roles].include? 'oozie'
        }.map{|node| node[:hostname] + "." + @domain};
-   @tez = eval(@nodes).select {|node| node[:roles].include? 'tez-ui'
+   @superset = eval(@nodes).select {|node| node[:roles].include? 'superset'
        }.map{|node| node[:hostname] + "." + @domain};
-   @xmondrian = eval(@nodes).select {|node| node[:roles].include? 'xmondrian'
+   @tez = eval(@nodes).select {|node| node[:roles].include? 'tez-ui'
        }.map{|node| node[:hostname] + "." + @domain};
    @yarn = eval(@nodes).select {|node| node[:roles].include? 'yarn'
        }.map{|node| node[:hostname] + "." + @domain};
@@ -41,9 +39,6 @@ Useful links:
 <% end -%>
 <% if @druid_overlord.length > 0 -%>
   <li><a href="http://<%= @druid_overlord[0] %>:8090/">Druid Overlord</a></li>
-<% end -%>
-<% if @druid_pivot.length > 0 -%>
-  <li><a href="http://<%= @druid_pivot[0] %>:9095/">Druid Pivot Server</a></li>
 <% end -%>
 <% if @hbase.length > 0 -%>
   <li><a href="http://<%= @hbase[0] %>:16010/">HBase Master</a></li>
@@ -61,15 +56,14 @@ Useful links:
 <% if @oozie.length > 0 -%>
   <li><a href="http://<%= @oozie[0] %>:11000/">Oozie</a></li>
 <% end -%>
+<% if @superset.length > 0 -%>
+  <li><a href="http://<%= @superset[0] %>:9999/">Superset</a></li>
+<% end -%>
 <% if @tez.length > 0 -%>
   <li><a href="http://<%= @tez[0] %>:80/tez-ui/">Tez UI</a></li>
 <% end -%>
 <% if @hive2_server2.length > 0 -%>
-  <li><a href="http://<%= @tez[0] %>:80/tez-ui2/">Tez UI (Hive 2)</a></li>
   <li><a href="http://<%= @hive2_server2[0] %>:10002/">HiveServer2 UI</a></li>
-<% end -%>
-<% if @xmondrian.length > 0 -%>
-  <li><a href="http://<%= @xmondrian[0] %>:8080/xmondrian">XMondrian</a></li>
 <% end -%>
 <% if @yarn.length > 0 -%>
   <li><a href="http://<%= @yarn[0] %>:8088/">YARN Resource Manager</a></li>
