@@ -13,9 +13,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-class druid_superset {
-  require druid_base
-
+class superset {
   $path="/usr/hdp/${hdp_version}/superset/bin:/bin:/usr/bin:/usr/sbin"
 
   # Install and setup.
@@ -27,29 +25,30 @@ class druid_superset {
     ensure => installed,
   }
   ->
-  exec { "fabmanager create-admin --app superset --username admin --password admin --firstname admin --lastname user --email nobody@example.com":
-    cwd => "/",
-    path => "$path",
-  }
-  ->
-  exec { "superset db upgrade":
-    cwd => "/",
-    path => "$path",
-  }
-  ->
-  exec { "superset load_examples":
-    cwd => "/",
-    path => "$path",
-  }
-  ->
-  exec { "superset init":
-    cwd => "/",
-    path => "$path",
-  }
-  ->
   file { "/usr/hdp/current/superset":
     ensure => link,
     target => "/usr/hdp/${hdp_version}/superset",
+    before => Service["superset"],
+  }
+  ->
+  exec { "/usr/hdp/current/superset/bin/fabmanager create-admin --app superset --username admin --password password --firstname admin --lastname user --email nobody@example.com":
+    cwd => "/",
+    path => "$path",
+  }
+  ->
+  exec { "/usr/hdp/current/superset/bin/superset db upgrade":
+    cwd => "/",
+    path => "$path",
+  }
+  ->
+  exec { "/usr/hdp/current/superset/bin/superset load_examples":
+    cwd => "/",
+    path => "$path",
+  }
+  ->
+  exec { "/usr/hdp/current/superset/bin/superset init":
+    cwd => "/",
+    path => "$path",
     before => Service["superset"],
   }
 
