@@ -20,15 +20,15 @@ class spark_client {
 
   $path="${jdk::home}/bin:/bin:/usr/bin"
 
-  package { "spark${package_version}-python":
+  package { "spark2${package_version}-python":
     ensure => installed,
   }
 
-  package { "spark${package_version}":
+  package { "spark2${package_version}":
     ensure => installed,
   }
   ->
-  exec { "hdp-select set spark-client ${hdp_version}":
+  exec { "hdp-select set spark2-client ${hdp_version}":
     cwd => "/",
     path => "$path",
   }
