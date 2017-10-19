@@ -52,7 +52,7 @@ class odbc_client {
   }
 
   exec { "Download ODBC":
-    command => "curl -C - -O $driver_url",
+    command => "wget -nv -c $driver_url",
     cwd => "/tmp",
     path => "$path",
   }
