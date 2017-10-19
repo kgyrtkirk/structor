@@ -61,13 +61,13 @@ class postgres_server {
     cwd => "/",
     path => "${path}",
     user => "postgres",
-    unless => 'grep vagrant /var/lib/pgsql/data/global/pg_auth',
+    unless => 'psql -tc "select rolname from pg_roles;" | grep vagrant ',
   }
   ->
   exec { 'createdb vagrant':
     cwd => "/",
     path => "${path}",
     user => "postgres",
-    unless => 'grep vagrant /var/lib/pgsql/data/global/pg_database',
+    unless => 'psql -tc "select datname from pg_database;" | grep vagrant',
   }
 }
