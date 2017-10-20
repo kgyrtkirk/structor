@@ -13,22 +13,61 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-#include postgresql
+class postgres_server {
+  require repos_setup
 
-class { 'postgresql::server':
-  ip_mask_deny_postgres_user => '0.0.0.0/32',
-  ip_mask_allow_all_users    => '0.0.0.0/0',
-  ipv4acls                   => ['host    all         all         192.168.0.0/16        password'],
-  postgres_password => 'postgres',
-  
+  $path = "/sbin:/usr/sbin:/bin:/usr/bin"
+
+  # Client.
+  package { "postgresql-client":
+    ensure => installed,
+  }
+
+  # Server.
+  package { "postgresql":
+    ensure => installed,
+  }
+  ->
+  exec { 'service postgresql initdb':
+    cwd => "/",
+    path => "${path}",
+    creates => '/var/lib/pgsql/data/pg_log',
+  }
+  ->
+  file { '/var/lib/pgsql/data/pg_hba.conf':
+    ensure => file,
+    source => "puppet:///modules/postgres_server/pg_hba.conf",
+    owner => postgres,
+    group => postgres,
+    mode => '600',
+  }
+  ->
+  file { '/var/lib/pgsql/data/postgresql.conf':
+    ensure => file,
+    source => "puppet:///modules/postgres_server/postgresql.conf",
+    owner => postgres,
+    group => postgres,
+    mode => '600',
+  }
+  ->
+  service { 'postgresql':
+    ensure => running,
+    enable => true,
+    before => Exec['Create User'],
+  }
+
+  exec { 'Create User':
+    command => 'psql -c "CREATE USER vagrant WITH SUPERUSER PASSWORD \'vagrant\';"',
+    cwd => "/",
+    path => "${path}",
+    user => "postgres",
+    unless => 'psql -tc "select rolname from pg_roles;" | grep vagrant ',
+  }
+  ->
+  exec { 'createdb vagrant':
+    cwd => "/",
+    path => "${path}",
+    user => "postgres",
+    unless => 'psql -tc "select datname from pg_database;" | grep vagrant',
+  }
 }
-
-#postgresql::server::role { 'vagrant':
- # password_hash => postgresql_password('vagrant', 'vagrant'),
- # superuser => true,
-#}
-
-#postgresql::server::db { 'vagrant':
-#  user     => 'vagrant',
-#}
-
