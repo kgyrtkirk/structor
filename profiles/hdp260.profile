@@ -1,9 +1,9 @@
 {
-  "os": "centos7",
+  "os": "ubuntu14",
   "hdp_short_version": "2.6.0",
-  "java_version": "java-1.8.0-openjdk",
   "vm_mem": 8192,
   "vm_cpus": 4,
+  "java_version": "openjdk-8-jdk",
 
   "am_mem": 512,
   "server_mem": 768,
@@ -15,7 +15,7 @@
 
   "clients" : [ "hdfs", "hive2", "odbc", "slider", "yarn", "zk" ],
   "nodes": [
-    {"hostname": "hdp260", "ip": "192.168.59.21",
+    {"hostname": "hdp260", "ip": "192.168.56.101",
      "roles": ["client", "hive-db", "hive2-meta",
                "hive2", "hive2-server2",
                "httpd", "nn", "postgres", "slave", "tez-ui",
