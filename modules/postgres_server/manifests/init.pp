@@ -19,12 +19,12 @@ class postgres_server {
   $path = "/sbin:/usr/sbin:/bin:/usr/bin"
 
   # Client.
-  package { "postgresql":
+  package { "postgresql-client":
     ensure => installed,
   }
 
   # Server.
-  package { "postgresql-server":
+  package { "postgresql":
     ensure => installed,
   }
   ->
